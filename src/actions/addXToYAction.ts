@@ -14,21 +14,17 @@ const addXToYAction: IAddXToYAction = (
 
   if (!variableToUpdate) {
     throw new Error(
-      `Unable to find variable ${y} on state: ${JSON.stringify(state)}`
+      `Unable to find variable ${y} in state: ${JSON.stringify(state)}`
     );
   }
 
   if (variableToUpdate.type !== VariableTypes.number) {
-    throw new Error(
-      `Variable type needs to be number, variables type is: ${
-        variableToUpdate.type
-      }`
-    );
+    throw new Error(`Variable type should be number: ${variableToUpdate.type}`);
   }
 
   if (typeof variableToUpdate.value !== 'number') {
     throw new Error(
-      `Variable type is number but value is not: ${variableToUpdate.value}`
+      `Variable value should be number: ${variableToUpdate.value}`
     );
   }
 

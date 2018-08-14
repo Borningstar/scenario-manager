@@ -1,19 +1,25 @@
+import { ActionType } from '../actions';
+
 export type Scenario = Readonly<{
   id: string;
   name: string;
   teams: ReadonlyArray<Team>;
   variables: ReadonlyArray<Variable>;
-  events: ReadonlyArray<Event>;
+  events: ReadonlyArray<ScenarioEvent>;
 }>;
 
-export type ScenarioState = Readonly<{
+export type ActiveScenarioState = Readonly<{
   id: string;
+  scenarioId: string;
+  completed: boolean;
+  paused: boolean;
   teams: ReadonlyArray<Team>;
   variables: ReadonlyArray<Variable>;
 }>;
 
-export type Event = Readonly<{
+export type ScenarioEvent = Readonly<{
   id: string;
+  activeScenarioId: string;
   name: string;
   action: ActionType;
   type: EventType;
@@ -48,12 +54,4 @@ export enum VariableType {
   boolean,
   string,
   number
-}
-
-export interface IAddValueToVariableAction {
-  (state: ScenarioState, value: number, variable: string): ScenarioState;
-}
-
-export enum ActionType {
-  AddValueToVariable
 }

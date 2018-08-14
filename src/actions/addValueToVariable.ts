@@ -1,9 +1,5 @@
-import {
-  IAddValueToVariableAction,
-  ScenarioState,
-  Variable,
-  VariableType
-} from '../types';
+import { ActiveScenarioState, Variable, VariableType } from '../types';
+import { IAddValueToVariable } from '.';
 
 /**
  * Adds X value to variable Y in state and returns updated state
@@ -11,8 +7,8 @@ import {
  * @param value Value to add
  * @param variable Name of variable to add value to
  */
-const addValueToVariable: IAddValueToVariableAction = (
-  state: ScenarioState,
+const addValueToVariable: IAddValueToVariable = (
+  state: ActiveScenarioState,
   value: number,
   variable: string
 ) => {

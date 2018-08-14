@@ -1,20 +1,6 @@
-import { ScenarioState, VariableType, Variable } from '../../src/types';
+import { VariableType } from '../../src/types';
 import addXToYAction from '../../src/actions/addValueToVariable';
-
-const createState = (props?: Partial<ScenarioState>) => ({
-  id: 'scenario',
-  teams: [],
-  variables: [],
-  ...props
-});
-
-const createVariable = (props?: Partial<Variable>) => ({
-  id: '1',
-  name: 'variable',
-  type: VariableType.number,
-  value: 0,
-  ...props
-});
+import { createState, createVariable } from '../types';
 
 describe('.addXToYAction', () => {
   const variableName = 'variable';

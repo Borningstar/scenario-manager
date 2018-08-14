@@ -1,28 +1,32 @@
-import { ScenarioState, VariableTypes } from '../../src/types';
-import addXToYAction from '../../src/actions/addXToYAction';
+import { ScenarioState, VariableType, Variable } from '../../src/types';
+import addXToYAction from '../../src/actions/addValueToVariable';
 
-const createDefaultState = (props?: Partial<ScenarioState>) => {
-  const defaultProps = {
-    name: 'scenario',
-    teams: [],
-    variables: []
-  };
+const createState = (props?: Partial<ScenarioState>) => ({
+  id: 'scenario',
+  teams: [],
+  variables: [],
+  ...props
+});
 
-  return { ...defaultProps, ...props };
-};
+const createVariable = (props?: Partial<Variable>) => ({
+  id: '1',
+  name: 'variable',
+  type: VariableType.number,
+  value: 0,
+  ...props
+});
 
 describe('.addXToYAction', () => {
-  it('should add value to specified variable property in state', () => {
-    const variableName = 'variable';
-    const variableValue = 1;
+  const variableName = 'variable';
+  const variableValue = 1;
 
-    const state = createDefaultState({
+  it('should add value to specified variable property in state', () => {
+    const state = createState({
       variables: [
-        {
+        createVariable({
           name: variableName,
-          type: VariableTypes.number,
           value: variableValue
-        }
+        })
       ]
     });
 
@@ -34,9 +38,7 @@ describe('.addXToYAction', () => {
   });
 
   it('should throw error if variable doesnt exist in state', () => {
-    const variableName = 'variable';
-
-    const state = createDefaultState({
+    const state = createState({
       variables: []
     });
 
@@ -48,35 +50,31 @@ describe('.addXToYAction', () => {
   });
 
   it('should throw error if variabe type isnt number', () => {
-    const variableName = 'variable';
-    const variableValue = 1;
-
-    const state = createDefaultState({
+    const state = createState({
       variables: [
-        {
+        createVariable({
           name: variableName,
-          type: VariableTypes.boolean,
+          type: VariableType.boolean,
           value: variableValue
-        }
+        })
       ]
     });
 
     expect(() => addXToYAction(state, 0, variableName)).toThrow(
-      `Variable type should be number: ${VariableTypes.boolean}`
+      `Variable type should be number: ${VariableType.boolean}`
     );
   });
 
   it('should throw error if variable value isnt number', () => {
-    const variableName = 'variable';
     const variableValue = '1';
 
-    const state = createDefaultState({
+    const state = createState({
       variables: [
-        {
+        createVariable({
           name: variableName,
-          type: VariableTypes.number,
+          type: VariableType.number,
           value: variableValue
-        }
+        })
       ]
     });
 

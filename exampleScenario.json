@@ -1,0 +1,27 @@
+{
+  "name": "scenario",
+  "teams": [{
+    "name": "team",
+    "points": 0,
+    "variables": [{
+      "name": "variable",
+      "type": "boolean",
+      "value": false
+    }]
+  }],
+  "variables": [{
+    "name": "variable",
+    "type": "boolean",
+    "value": false
+  }],
+  "events": [{
+    "name": "event",
+    "type": "activated",
+    "activatedBy": "area",
+    "action": {
+      "type": "AddXToY",
+      "x": 1,
+      "y": "variable"
+    }
+  }]
+}

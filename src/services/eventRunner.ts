@@ -1,13 +1,13 @@
 import { ScenarioEvent } from '../types';
 import { IActions, ActionType } from '../actions';
-import { IEventRunner, IStateManager } from '.';
+import { IEventRunner, IActiveScenarioManager } from '.';
 
 const triggerEvent = async (
   event: ScenarioEvent,
   actions: IActions,
-  stateManager: IStateManager
+  activeScenarioManager: IActiveScenarioManager
 ) => {
-  const state = await stateManager.getState(event.activeScenarioId);
+  const state = await activeScenarioManager.getScenario(event.activeScenarioId);
 
   switch (event.action) {
     case ActionType.AddValueToVariable:
@@ -25,14 +25,14 @@ const triggerEvent = async (
         event.properties.destinationVariable
       );
 
-      stateManager.setState(newState);
+      activeScenarioManager.updateScenario(newState);
       break;
   }
 };
 
 export const createEventRunner = (
   actions: IActions,
-  stateManager: IStateManager
+  stateManager: IActiveScenarioManager
 ): IEventRunner => ({
   triggerEvent: (event: ScenarioEvent) =>
     triggerEvent(event, actions, stateManager)

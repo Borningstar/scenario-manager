@@ -4,7 +4,7 @@ export interface IEventRunner {
   triggerEvent: (event: ScenarioEvent) => void;
 }
 
-export interface IStateManager {
-  getState: (id: string) => ActiveScenarioState;
-  setState: (state: ActiveScenarioState) => void;
+export interface IActiveScenarioManager {
+  getScenario: (id: string) => ActiveScenarioState;
+  updateScenario: (state: ActiveScenarioState) => void;
 }

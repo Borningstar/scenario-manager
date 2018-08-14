@@ -1,7 +1,7 @@
 import { createEventRunner } from '../../src/services/eventRunner';
 import { EventType, EventProperties, ScenarioEvent } from '../../src/types';
 import { ActionType } from '../../src/actions';
-import { IStateManager } from '../../src/services';
+import { IActiveScenarioManager } from '../../src/services';
 import { createState } from '../types';
 import { createActionsMock } from '../actions';
 
@@ -22,9 +22,9 @@ const createProperties = (props?: Partial<EventProperties>) => ({
   ...props
 });
 
-const createStateManagerMock = (props?: Partial<IStateManager>) => ({
-  getState: jest.fn(async () => createState()),
-  setState: jest.fn(),
+const createStateManagerMock = (props?: Partial<IActiveScenarioManager>) => ({
+  getScenario: jest.fn(async () => createState()),
+  updateScenario: jest.fn(),
   ...props
 });
 
@@ -38,8 +38,8 @@ describe('eventRunner', () => {
       });
 
       const stateManagerMock = createStateManagerMock({
-        getState: jest.fn(async () => createState()),
-        setState: jest.fn()
+        getScenario: jest.fn(async () => createState()),
+        updateScenario: jest.fn()
       });
 
       const sut = createEventRunner(actionsMock, stateManagerMock);
@@ -51,9 +51,9 @@ describe('eventRunner', () => {
 
       await sut.triggerEvent(event);
 
-      expect(stateManagerMock.getState).toHaveBeenCalledTimes(1);
-      expect(stateManagerMock.setState).toHaveBeenCalledTimes(1);
-      expect(stateManagerMock.setState).toHaveBeenCalledWith(newState);
+      expect(stateManagerMock.getScenario).toHaveBeenCalledTimes(1);
+      expect(stateManagerMock.updateScenario).toHaveBeenCalledTimes(1);
+      expect(stateManagerMock.updateScenario).toHaveBeenCalledWith(newState);
     });
 
     it('should call AddValueToVariable with properties', async () => {
@@ -64,7 +64,7 @@ describe('eventRunner', () => {
       const state = createState();
 
       const stateManagerMock = createStateManagerMock({
-        getState: jest.fn(async () => state)
+        getScenario: jest.fn(async () => state)
       });
 
       const sut = createEventRunner(actionsMock, stateManagerMock);

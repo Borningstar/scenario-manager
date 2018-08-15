@@ -29,87 +29,89 @@ const createStateManagerMock = (props?: Partial<IActiveScenarioManager>) => ({
 });
 
 describe('eventRunner', () => {
-  describe('when action type is AddValueToVariable', () => {
-    it('should call getState when calling and and setState with new state', async () => {
-      const newState = createActiveScenario({ id: '2' });
+  describe('.triggerEvent', () => {
+    describe('when action type is AddValueToVariable', () => {
+      it('should call getState when calling and and setState with new state', async () => {
+        const newState = createActiveScenario({ id: '2' });
 
-      const actionsMock = createActionsMock({
-        addValueToVariable: jest.fn(() => newState)
+        const actionsMock = createActionsMock({
+          addValueToVariable: jest.fn(() => newState)
+        });
+
+        const stateManagerMock = createStateManagerMock({
+          getScenario: jest.fn(async () => createActiveScenario()),
+          updateScenario: jest.fn()
+        });
+
+        const sut = createEventRunner(actionsMock, stateManagerMock);
+
+        const event = createEvent({
+          action: ActionType.AddValueToVariable,
+          properties: createProperties()
+        });
+
+        await sut.triggerEvent(event);
+
+        expect(stateManagerMock.getScenario).toHaveBeenCalledTimes(1);
+        expect(stateManagerMock.updateScenario).toHaveBeenCalledTimes(1);
+        expect(stateManagerMock.updateScenario).toHaveBeenCalledWith(newState);
       });
 
-      const stateManagerMock = createStateManagerMock({
-        getScenario: jest.fn(async () => createActiveScenario()),
-        updateScenario: jest.fn()
-      });
+      it('should call AddValueToVariable with properties', async () => {
+        const actionsMock = createActionsMock({
+          addValueToVariable: jest.fn()
+        });
 
-      const sut = createEventRunner(actionsMock, stateManagerMock);
+        const state = createActiveScenario();
 
-      const event = createEvent({
-        action: ActionType.AddValueToVariable,
-        properties: createProperties()
-      });
+        const stateManagerMock = createStateManagerMock({
+          getScenario: jest.fn(async () => state)
+        });
 
-      await sut.triggerEvent(event);
+        const sut = createEventRunner(actionsMock, stateManagerMock);
 
-      expect(stateManagerMock.getScenario).toHaveBeenCalledTimes(1);
-      expect(stateManagerMock.updateScenario).toHaveBeenCalledTimes(1);
-      expect(stateManagerMock.updateScenario).toHaveBeenCalledWith(newState);
-    });
+        const value = 1;
+        const destinationVariable = 'variable';
 
-    it('should call AddValueToVariable with properties', async () => {
-      const actionsMock = createActionsMock({
-        addValueToVariable: jest.fn()
-      });
+        const event = createEvent({
+          action: ActionType.AddValueToVariable,
+          properties: createProperties({
+            value,
+            destinationVariable
+          })
+        });
 
-      const state = createActiveScenario();
+        await sut.triggerEvent(event);
 
-      const stateManagerMock = createStateManagerMock({
-        getScenario: jest.fn(async () => state)
-      });
-
-      const sut = createEventRunner(actionsMock, stateManagerMock);
-
-      const value = 1;
-      const destinationVariable = 'variable';
-
-      const event = createEvent({
-        action: ActionType.AddValueToVariable,
-        properties: createProperties({
+        expect(actionsMock.addValueToVariable).toHaveBeenCalledTimes(1);
+        expect(actionsMock.addValueToVariable).toBeCalledWith(
+          state,
           value,
           destinationVariable
-        })
+        );
       });
 
-      await sut.triggerEvent(event);
+      it('should throw when properties value is not a number', async () => {
+        expect.assertions(1);
 
-      expect(actionsMock.addValueToVariable).toHaveBeenCalledTimes(1);
-      expect(actionsMock.addValueToVariable).toBeCalledWith(
-        state,
-        value,
-        destinationVariable
-      );
-    });
+        const sut = createEventRunner(
+          createActionsMock(),
+          createStateManagerMock()
+        );
 
-    it('should throw when properties value is not a number', async () => {
-      expect.assertions(1);
+        const event = createEvent({
+          action: ActionType.AddValueToVariable,
+          properties: createProperties({
+            value: 'a'
+          })
+        });
 
-      const sut = createEventRunner(
-        createActionsMock(),
-        createStateManagerMock()
-      );
-
-      const event = createEvent({
-        action: ActionType.AddValueToVariable,
-        properties: createProperties({
-          value: 'a'
-        })
+        await expect(sut.triggerEvent(event)).rejects.toThrowError(
+          `Value type in event properties it not a number: ${JSON.stringify(
+            event
+          )}`
+        );
       });
-
-      await expect(sut.triggerEvent(event)).rejects.toThrowError(
-        `Value type in event properties it not a number: ${JSON.stringify(
-          event
-        )}`
-      );
     });
   });
 });

@@ -5,10 +5,12 @@ export class Variable extends Typegoose {
   constructor(props?: Partial<Variable>) {
     super();
 
-    this.id = props.id;
-    this.name = props.name;
-    this.type = props.type;
-    this.value = props.value;
+    if (props) {
+      this.id = props.id;
+      this.name = props.name;
+      this.type = props.type;
+      this.value = props.value;
+    }
   }
 
   public update(props: {

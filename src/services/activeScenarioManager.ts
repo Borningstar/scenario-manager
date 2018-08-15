@@ -1,9 +1,9 @@
 import { IActiveScenarioManager } from '.';
-import { ActiveScenario } from '../models/activeScenario';
+import { ActiveScenario, ActiveScenarioModel } from '../models/activeScenario';
 
-const getScenario = (id: string): ActiveScenario => {
-  throw new Error('Not implemented');
-};
+// TODO: Check what happens when it fails to find
+const getScenario = async (id: string): Promise<ActiveScenario> =>
+  await ActiveScenarioModel.findById(id);
 
 const updateScenario = (state: ActiveScenario): void => {
   throw new Error('Not implemented');

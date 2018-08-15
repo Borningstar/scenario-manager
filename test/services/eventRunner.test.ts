@@ -2,8 +2,8 @@ import { createEventRunner } from '../../src/services/eventRunner';
 import { EventType, EventProperties, ScenarioEvent } from '../../src/types';
 import { ActionType } from '../../src/actions';
 import { IActiveScenarioManager } from '../../src/services';
-import { createState } from '../types';
 import { createActionsMock } from '../actions';
+import { createActiveScenario } from '../models';
 
 const createEvent = (props?: Partial<ScenarioEvent>) => ({
   id: '1',
@@ -23,7 +23,7 @@ const createProperties = (props?: Partial<EventProperties>) => ({
 });
 
 const createStateManagerMock = (props?: Partial<IActiveScenarioManager>) => ({
-  getScenario: jest.fn(async () => createState()),
+  getScenario: jest.fn(async () => createActiveScenario()),
   updateScenario: jest.fn(),
   ...props
 });
@@ -31,14 +31,14 @@ const createStateManagerMock = (props?: Partial<IActiveScenarioManager>) => ({
 describe('eventRunner', () => {
   describe('when action type is AddValueToVariable', () => {
     it('should call getState when calling and and setState with new state', async () => {
-      const newState = createState({ id: '2' });
+      const newState = createActiveScenario({ id: '2' });
 
       const actionsMock = createActionsMock({
         addValueToVariable: jest.fn(() => newState)
       });
 
       const stateManagerMock = createStateManagerMock({
-        getScenario: jest.fn(async () => createState()),
+        getScenario: jest.fn(async () => createActiveScenario()),
         updateScenario: jest.fn()
       });
 
@@ -61,7 +61,7 @@ describe('eventRunner', () => {
         addValueToVariable: jest.fn()
       });
 
-      const state = createState();
+      const state = createActiveScenario();
 
       const stateManagerMock = createStateManagerMock({
         getScenario: jest.fn(async () => state)

@@ -1,13 +1,13 @@
 import { VariableType } from '../../src/types';
 import addXToYAction from '../../src/actions/addValueToVariable';
-import { createState, createVariable } from '../types';
+import { createActiveScenario, createVariable } from '../models';
 
 describe('.addXToYAction', () => {
   const variableName = 'variable';
   const variableValue = 1;
 
   it('should add value to specified variable property in state', () => {
-    const state = createState({
+    const state = createActiveScenario({
       variables: [
         createVariable({
           name: variableName,
@@ -24,7 +24,7 @@ describe('.addXToYAction', () => {
   });
 
   it('should throw error if variable doesnt exist in state', () => {
-    const state = createState({
+    const state = createActiveScenario({
       variables: []
     });
 
@@ -35,8 +35,8 @@ describe('.addXToYAction', () => {
     );
   });
 
-  it('should throw error if variabe type isnt number', () => {
-    const state = createState({
+  it('should throw error if variable type isnt number', () => {
+    const state = createActiveScenario({
       variables: [
         createVariable({
           name: variableName,
@@ -54,7 +54,7 @@ describe('.addXToYAction', () => {
   it('should throw error if variable value isnt number', () => {
     const variableValue = '1';
 
-    const state = createState({
+    const state = createActiveScenario({
       variables: [
         createVariable({
           name: variableName,

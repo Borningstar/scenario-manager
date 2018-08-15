@@ -1,4 +1,5 @@
 import { ActionType } from '../actions';
+import { Variable } from '../models/variable';
 
 export type Scenario = Readonly<{
   id: string;
@@ -6,15 +7,6 @@ export type Scenario = Readonly<{
   teams: ReadonlyArray<Team>;
   variables: ReadonlyArray<Variable>;
   events: ReadonlyArray<ScenarioEvent>;
-}>;
-
-export type ActiveScenarioState = Readonly<{
-  id: string;
-  scenarioId: string;
-  completed: boolean;
-  paused: boolean;
-  teams: ReadonlyArray<Team>;
-  variables: ReadonlyArray<Variable>;
 }>;
 
 export type ScenarioEvent = Readonly<{
@@ -41,13 +33,6 @@ export type Team = Readonly<{
   name: string;
   points: number;
   variables: ReadonlyArray<Variable>;
-}>;
-
-export type Variable = Readonly<{
-  id: string;
-  name: string;
-  type: VariableType;
-  value: boolean | string | number;
 }>;
 
 export enum VariableType {

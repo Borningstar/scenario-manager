@@ -4,19 +4,19 @@ import { Variable } from './variable';
 
 export class ActiveScenario extends Typegoose {
   @prop({ index: true })
-  id?: string;
+  readonly id: string;
 
   @prop({ required: true })
-  scenarioId: string;
+  readonly scenarioId: string;
 
   @prop({ default: false })
-  completed: boolean;
+  readonly completed: boolean;
 
   @prop({ default: false })
-  paused: boolean;
+  readonly paused: boolean;
 
   @prop({ default: false })
-  started: boolean;
+  readonly started: boolean;
 
   @prop()
   teams?: ReadonlyArray<Team>;

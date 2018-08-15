@@ -1,5 +1,12 @@
 # TODO
 
+- Add pre- and post-actions to eventRunner (middleware)
+- Add logging middleware
+
+- Add socket.io
+- Add service to receive via socket and then trigger them
+- Add middleware that posts updates for active scenarios when they get updated
+
 - Error support to activeScenarioManager
 - Create active scenario
 - Active scenario operations -> start, stop, pause, etc

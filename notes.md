@@ -1,9 +1,5 @@
 # TODO
 
-- Add mongo
-- Add CRM
-- Add active scenarios to mongo
-- Determine if worth making a wrapper for the CRM
 - Test active scenario manager
 - Implement active scenario manager
 - Post request to trigger event

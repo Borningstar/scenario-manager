@@ -1,5 +1,6 @@
-import { ActiveScenarioState, Variable, VariableType } from '../types';
+import { VariableType } from '../types';
 import { IAddValueToVariable } from '.';
+import { ActiveScenario } from '../models/activeScenario';
 
 /**
  * Adds X value to variable Y in state and returns updated state
@@ -8,7 +9,7 @@ import { IAddValueToVariable } from '.';
  * @param variable Name of variable to add value to
  */
 const addValueToVariable: IAddValueToVariable = (
-  state: ActiveScenarioState,
+  state: ActiveScenario,
   value: number,
   variable: string
 ) => {
@@ -30,10 +31,9 @@ const addValueToVariable: IAddValueToVariable = (
     );
   }
 
-  const updatedVariable: Variable = {
-    ...variableToUpdate,
+  const updatedVariable = variableToUpdate.update({
     value: variableToUpdate.value + value
-  };
+  });
 
   const variables = [
     ...state.variables.filter(v => v.name !== variable),

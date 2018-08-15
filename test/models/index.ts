@@ -14,11 +14,12 @@ export const createActiveScenario = (props?: Partial<ActiveScenario>) =>
     ...props
   } as ActiveScenario);
 
-export const createVariable = (props?: Partial<Variable>) =>
+export const createVariableMock = (props?: Partial<Variable>) =>
   ({
     id: '1',
     name: 'variable',
     type: VariableType.number,
     value: 0,
+    update: jest.fn(),
     ...props
   } as Variable);

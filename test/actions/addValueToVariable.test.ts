@@ -1,26 +1,34 @@
 import { VariableType } from '../../src/types';
 import addXToYAction from '../../src/actions/addValueToVariable';
-import { createActiveScenario, createVariable } from '../models';
+import { createActiveScenario, createVariableMock } from '../models';
 
-describe('.addXToYAction', () => {
+describe('addValueToVariable', () => {
   const variableName = 'variable';
   const variableValue = 1;
 
-  it('should add value to specified variable property in state', () => {
-    const state = createActiveScenario({
-      variables: [
-        createVariable({
-          name: variableName,
-          value: variableValue
-        })
-      ]
+  it('should add value to specified variable property in active scenario and return updated variable', () => {
+    const valueToAdd = 1;
+
+    const updatedVariable = createVariableMock({
+      id: '2'
     });
 
-    const valueToAdd = 1;
+    const existingVariable = createVariableMock({
+      name: variableName,
+      value: variableValue,
+      update: jest.fn(() => updatedVariable)
+    });
+
+    const state = createActiveScenario({
+      variables: [existingVariable]
+    });
 
     const newState = addXToYAction(state, valueToAdd, variableName);
 
-    expect(newState.variables[0].value).toEqual(variableValue + valueToAdd);
+    expect(existingVariable.update).toBeCalledWith({
+      value: variableValue + valueToAdd
+    });
+    expect(newState.variables[0]).toEqual(updatedVariable);
   });
 
   it('should throw error if variable doesnt exist in state', () => {
@@ -38,7 +46,7 @@ describe('.addXToYAction', () => {
   it('should throw error if variable type isnt number', () => {
     const state = createActiveScenario({
       variables: [
-        createVariable({
+        createVariableMock({
           name: variableName,
           type: VariableType.boolean,
           value: variableValue
@@ -56,7 +64,7 @@ describe('.addXToYAction', () => {
 
     const state = createActiveScenario({
       variables: [
-        createVariable({
+        createVariableMock({
           name: variableName,
           type: VariableType.number,
           value: variableValue

@@ -1,3 +1,13 @@
+# TODO
+
+- Add mongo
+- Add CRM
+- Add active scenarios to mongo
+- Determine if worth making a wrapper for the CRM
+- Test active scenario manager
+- Implement active scenario manager
+- Post request to trigger event
+
 EventRunner
 -> Queue Event
 -> Runs queues events
@@ -23,7 +33,7 @@ Scenario-Specific
 Events
 -> Timer (auto-generated, periodically increments timers )
 -> Conditional (checked every tick, every time state is changed?)
--> Activated (actived by user clicking on area, using button, etc)
+-> Activated (activated by user clicking on area, using button, etc)
 
 Actions
 -> Timer

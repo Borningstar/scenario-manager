@@ -51,7 +51,7 @@ export type Variable = Readonly<{
 }>;
 
 export enum VariableType {
-  boolean,
-  string,
-  number
+  boolean = 'boolean',
+  string = 'string',
+  number = 'number'
 }

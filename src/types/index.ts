@@ -25,7 +25,7 @@ export type EventProperties = Readonly<{
 }>;
 
 export enum EventType {
-  activated
+  Activated
 }
 
 export type Team = Readonly<{

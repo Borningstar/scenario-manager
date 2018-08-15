@@ -1,8 +1,9 @@
 # TODO
 
-- Test active scenario manager
-- Implement active scenario manager
-- Post request to trigger event
+- Error support to activeScenarioManager
+- Create active scenario
+- Active scenario operations -> start, stop, pause, etc
+- Initial teams support -> action to modify team variable, teams all have same variable set
 
 EventRunner
 -> Queue Event
@@ -14,6 +15,7 @@ ScenarioRunner
 
 Areas
 -> Name
+-> Label (can be set while active? for team bases etc)
 -> X, Y
 -> H, W
 -> Color
@@ -73,3 +75,11 @@ State
 -> Teams
 --> Name
 --> Points
+
+## Minimum
+
+- Start Scenario from Template
+- Add teams from list of premade ones
+- Start/Stop/Pause scenario
+- Scenario has timer
+- Increment/Decrement/Set points for teams

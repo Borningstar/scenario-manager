@@ -3,20 +3,19 @@ import { Team } from '../types';
 import { Variable } from './variable';
 
 export class ActiveScenario extends Typegoose {
-  @prop({ index: true })
-  readonly id: string;
+  _id: string;
 
   @prop({ required: true })
-  readonly scenarioId: string;
+  scenarioId: string;
 
   @prop({ default: false })
-  readonly completed: boolean;
+  completed: boolean;
 
   @prop({ default: false })
-  readonly paused: boolean;
+  paused: boolean;
 
   @prop({ default: false })
-  readonly started: boolean;
+  started: boolean;
 
   @prop()
   teams?: ReadonlyArray<Team>;

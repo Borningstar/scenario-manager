@@ -7,7 +7,7 @@ const getScenario = async (id: string): Promise<ActiveScenario> =>
 
 // TODO: Check what happens when it fails to find
 const updateScenario = async (scenario: ActiveScenario): Promise<void> =>
-  await ActiveScenarioModel.updateOne({ _id: scenario.id }, scenario);
+  await ActiveScenarioModel.updateOne({ _id: scenario._id }, scenario);
 
 export const createActiveScenarioManager = (): IActiveScenarioManager => ({
   getScenario: (id: string) => getScenario(id),

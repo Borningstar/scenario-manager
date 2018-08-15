@@ -5,6 +5,10 @@ import logger from 'morgan';
 
 import { indexRouter } from './routes';
 import { connectToDatabase } from './services/database';
+import { createActiveScenarioManager } from './services/activeScenarioManager';
+import { createEventRunner } from './services/eventRunner';
+import actions, { ActionType } from './actions';
+import { ScenarioEvent, EventType } from './types';
 
 const app = express();
 
@@ -17,5 +21,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 connectToDatabase();
+
+const activeScenarioManager = createActiveScenarioManager();
+const eventRunner = createEventRunner(actions, activeScenarioManager);
+
+const event: ScenarioEvent = {
+  id: '1',
+  activeScenarioId: '5b73a9f6ede86a23a815c980',
+  name: 'Event',
+  action: ActionType.AddValueToVariable,
+  type: EventType.Activated,
+  properties: {
+    value: 4,
+    destinationVariable: 'variable'
+  }
+};
+
+eventRunner.triggerEvent(event);
 
 export default app;

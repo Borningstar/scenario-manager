@@ -9,26 +9,25 @@ describe('addValueToVariable', () => {
   it('should add value to specified variable property in active scenario and return updated variable', () => {
     const valueToAdd = 1;
 
-    const updatedVariable = createVariableMock({
-      id: '2'
-    });
-
     const existingVariable = createVariableMock({
       name: variableName,
-      value: variableValue,
-      update: jest.fn(() => updatedVariable)
+      value: variableValue
     });
 
-    const state = createActiveScenario({
+    const activeScenario = createActiveScenario({
       variables: [existingVariable]
     });
 
-    const newState = addXToYAction(state, valueToAdd, variableName);
+    const updatedScenario = addXToYAction(
+      activeScenario,
+      valueToAdd,
+      variableName
+    );
 
-    expect(existingVariable.update).toBeCalledWith({
-      value: variableValue + valueToAdd
-    });
-    expect(newState.variables[0]).toEqual(updatedVariable);
+    const expectedUpdatedScenario = activeScenario;
+    expectedUpdatedScenario.variables[0].value = variableValue + valueToAdd;
+
+    expect(updatedScenario).toEqual(expectedUpdatedScenario);
   });
 
   it('should throw error if variable doesnt exist in state', () => {

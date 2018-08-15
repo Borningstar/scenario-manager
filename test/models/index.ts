@@ -20,6 +20,5 @@ export const createVariableMock = (props?: Partial<Variable>) =>
     name: 'variable',
     type: VariableType.number,
     value: 0,
-    update: jest.fn(),
     ...props
   } as Variable);

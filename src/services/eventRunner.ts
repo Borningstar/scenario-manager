@@ -7,7 +7,9 @@ const triggerEvent = async (
   actions: IActions,
   activeScenarioManager: IActiveScenarioManager
 ) => {
-  const state = await activeScenarioManager.getScenario(event.activeScenarioId);
+  const activeScenario = await activeScenarioManager.getScenario(
+    event.activeScenarioId
+  );
 
   switch (event.action) {
     case ActionType.AddValueToVariable:
@@ -20,12 +22,13 @@ const triggerEvent = async (
       }
 
       const newState = actions.addValueToVariable(
-        state,
+        activeScenario,
         event.properties.value,
         event.properties.destinationVariable
       );
 
       activeScenarioManager.updateScenario(newState);
+
       break;
   }
 };

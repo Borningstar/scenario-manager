@@ -1,28 +1,46 @@
 import { createActiveScenarioManager } from '../../src/services/activeScenarioManager';
-import * as activeScenario from '../../src/models/activeScenario';
+import * as as from '../../src/models/activeScenario';
 import { createActiveScenario } from '../models';
 
 describe('activeScenarioManager', () => {
   beforeEach(() => {
-    spyOn(activeScenario, 'ActiveScenarioModel');
+    spyOn(as, 'ActiveScenarioModel');
   });
 
   describe('.getScenario', () => {
-    it('should call ActiveScenarioModel.Find', async () => {
+    it('should call ActiveScenarioModel.findById', async () => {
       const sut = createActiveScenarioManager();
 
       const id = '1';
 
-      activeScenario.ActiveScenarioModel.findById = jest.fn(async () =>
+      as.ActiveScenarioModel.findById = jest.fn(async () =>
         createActiveScenario()
       );
 
       await sut.getScenario(id);
 
-      expect(activeScenario.ActiveScenarioModel.findById).toHaveBeenCalledTimes(
-        1
+      expect(as.ActiveScenarioModel.findById).toHaveBeenCalledTimes(1);
+      expect(as.ActiveScenarioModel.findById).toBeCalledWith(id);
+    });
+  });
+
+  describe('.updateScenario', () => {
+    it('should call ActiveScenarioModel.updateOne', async () => {
+      const sut = createActiveScenarioManager();
+
+      as.ActiveScenarioModel.updateOne = jest.fn();
+
+      const activeScenario = createActiveScenario();
+
+      await sut.updateScenario(activeScenario);
+
+      expect(as.ActiveScenarioModel.updateOne).toHaveBeenCalledTimes(1);
+      expect(as.ActiveScenarioModel.updateOne).toBeCalledWith(
+        {
+          _id: activeScenario.id
+        },
+        activeScenario
       );
-      expect(activeScenario.ActiveScenarioModel.findById).toBeCalledWith(id);
     });
   });
 });

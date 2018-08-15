@@ -7,5 +7,5 @@ export interface IEventRunner {
 
 export interface IActiveScenarioManager {
   getScenario: (id: string) => Promise<ActiveScenario>;
-  updateScenario: (state: ActiveScenario) => void;
+  updateScenario: (state: ActiveScenario) => Promise<void>;
 }

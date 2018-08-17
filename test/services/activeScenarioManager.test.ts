@@ -37,7 +37,7 @@ describe('activeScenarioManager', () => {
       expect(as.ActiveScenarioModel.updateOne).toHaveBeenCalledTimes(1);
       expect(as.ActiveScenarioModel.updateOne).toBeCalledWith(
         {
-          _id: activeScenario.id
+          _id: activeScenario._id
         },
         activeScenario
       );

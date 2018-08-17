@@ -1,6 +1,9 @@
 # TODO
 
-- Add pre- and post-actions to eventRunner (middleware)
+- Create modified eventRunner
+- Modify activeScenarioManager to facilitate Event Sourcing
+- Create eventProcessor
+
 - Add logging middleware
 
 - Add socket.io
@@ -11,6 +14,18 @@
 - Create active scenario
 - Active scenario operations -> start, stop, pause, etc
 - Initial teams support -> action to modify team variable, teams all have same variable set
+
+## State Thing
+
+- DB -> Stores Events, latest state, initial state
+- eventRunner -> Take scenario, events list, returns updated scenario (support for middleware that can fire before, after scenario updates and is called with scenario and event)
+- activeScenarioManager
+  -> gets latest snapshot
+  -> event history post snapshot
+  -> creates new snapshot when getting new events
+  -> updates scenario with new events
+  -> snapshot = cached
+- eventProcessor -> updates scenario with new event, returns updated scenario, middleware for pre- and post- scenario updates
 
 EventRunner
 -> Queue Event

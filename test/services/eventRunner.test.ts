@@ -10,7 +10,7 @@ const createEvent = (props?: Partial<ScenarioEvent>) => ({
   activeScenarioId: '1',
   name: 'event',
   action: ActionType.AddValueToVariable,
-  type: EventType.activated,
+  type: EventType.Activated,
   properties: createProperties(),
   ...props
 });
@@ -32,7 +32,7 @@ describe('eventRunner', () => {
   describe('.triggerEvent', () => {
     describe('when action type is AddValueToVariable', () => {
       it('should call getState when calling and and setState with new state', async () => {
-        const newState = createActiveScenario({ id: '2' });
+        const newState = createActiveScenario({ _id: '2' });
 
         const actionsMock = createActionsMock({
           addValueToVariable: jest.fn(() => newState)

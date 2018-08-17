@@ -4,7 +4,7 @@ import { ActiveScenario } from '../../src/models/activeScenario';
 
 export const createActiveScenario = (props?: Partial<ActiveScenario>) =>
   ({
-    id: 'scenario',
+    _id: 'scenario',
     scenarioId: 'scenario',
     completed: false,
     paused: false,
@@ -16,7 +16,7 @@ export const createActiveScenario = (props?: Partial<ActiveScenario>) =>
 
 export const createVariableMock = (props?: Partial<Variable>) =>
   ({
-    id: '1',
+    _id: '1',
     name: 'variable',
     type: VariableType.number,
     value: 0,

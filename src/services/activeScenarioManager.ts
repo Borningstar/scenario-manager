@@ -1,22 +1,48 @@
 import { IActiveScenarioManager, IEventRunner } from '.';
 import { ActiveScenarioModel } from '../models/activeScenario';
 import { ScenarioState } from '../models/scenarioState';
+import { ScenarioEvent } from '../models/scenarioEvent';
+
+let scenarios: ReadonlyArray<ScenarioState> = [];
 
 // TODO: Check what happens when it fails to find
-const getScenario = async (id: string): Promise<ScenarioState> => {
-  throw new Error('Not implemented');
+const getScenario = async (
+  id: string,
+  eventRunner: IEventRunner
+): Promise<ScenarioState> => {
+  let scenario = scenarios.find(s => s.activeScenarioId === id);
 
-  await ActiveScenarioModel.findById(id);
+  if (scenario) {
+    return scenario;
+  }
+
+  const model = await ActiveScenarioModel.findById(id);
+
+  scenario = eventRunner.processEvents(model.events, model.initialState);
+
+  scenarios = [...scenarios, scenario];
+
+  return scenario;
 };
 
 // TODO: Check what happens when it fails to find
 const updateScenario = async (
   id: string,
-  events: ReadonlyArray<Event>
+  events: ReadonlyArray<ScenarioEvent>,
+  eventRunner: IEventRunner
 ): Promise<ScenarioState> => {
-  throw new Error('Not implemented');
+  const state = await getScenario(id, eventRunner);
 
-  // await ActiveScenarioModel.updateOne({ _id: id }, scenario);
+  await ActiveScenarioModel.updateOne(
+    { _id: id },
+    { $push: { $each: events } }
+  );
+
+  const updatedState = eventRunner.processEvents(events, state);
+
+  scenarios = [...scenarios.filter(s => s._id), updatedState];
+
+  return updatedState;
 };
 
 const getScenarioHistory = async (
@@ -28,8 +54,8 @@ const getScenarioHistory = async (
 export const createActiveScenarioManager = (
   eventRunner: IEventRunner
 ): IActiveScenarioManager => ({
-  getScenario: (id: string) => getScenario(id),
+  getScenario: (id: string) => getScenario(id, eventRunner),
   getScenarioHistory: (id: string) => getScenarioHistory(id),
-  updateScenario: (id: string, events: ReadonlyArray<Event>) =>
-    updateScenario(id, events)
+  updateScenario: (id: string, events: ReadonlyArray<ScenarioEvent>) =>
+    updateScenario(id, events, eventRunner)
 });

@@ -1,4 +1,4 @@
-import { prop, Typegoose, arrayProp } from 'typegoose';
+import { prop, Typegoose } from 'typegoose';
 import { ActionType } from '../actions';
 import { EventType, EventProperties } from '../types';
 

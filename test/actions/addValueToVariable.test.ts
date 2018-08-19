@@ -1,6 +1,6 @@
 import { VariableType } from '../../src/types';
 import addXToYAction from '../../src/actions/addValueToVariable';
-import { createVariableMock, createScenarioState } from '../models';
+import { createScenarioState, createVariable } from '../models';
 
 describe('addValueToVariable', () => {
   const variableName = 'variable';
@@ -9,7 +9,7 @@ describe('addValueToVariable', () => {
   it('should add value to specified variable property in active scenario and return updated variable', () => {
     const valueToAdd = 1;
 
-    const existingVariable = createVariableMock({
+    const existingVariable = createVariable({
       name: variableName,
       value: variableValue
     });
@@ -41,7 +41,7 @@ describe('addValueToVariable', () => {
   it('should throw error if variable type isnt number', () => {
     const state = createScenarioState({
       variables: [
-        createVariableMock({
+        createVariable({
           name: variableName,
           type: VariableType.boolean,
           value: variableValue
@@ -59,7 +59,7 @@ describe('addValueToVariable', () => {
 
     const state = createScenarioState({
       variables: [
-        createVariableMock({
+        createVariable({
           name: variableName,
           type: VariableType.number,
           value: variableValue

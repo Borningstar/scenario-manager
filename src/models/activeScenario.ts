@@ -7,6 +7,9 @@ export class ActiveScenario extends Typegoose {
   _id: string;
 
   @prop({ required: true })
+  scenarioId: string;
+
+  @prop({ required: true })
   initialState: ScenarioState;
 
   @arrayProp({ items: ScenarioEvent })

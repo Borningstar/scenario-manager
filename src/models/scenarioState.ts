@@ -6,7 +6,7 @@ export class ScenarioState extends Typegoose {
   _id: string;
 
   @prop({ required: true })
-  scenarioId: string;
+  activeScenarioId: string;
 
   @prop({ default: false })
   completed: boolean;

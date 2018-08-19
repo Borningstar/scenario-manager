@@ -10,5 +10,6 @@ export const createStateManagerMock = (
 });
 
 export const createEventRunnerMock = (props?: Partial<IEventRunner>) => ({
-  processEvents: jest.fn(() => createScenarioState())
+  processEvents: jest.fn(() => createScenarioState()),
+  ...props
 });

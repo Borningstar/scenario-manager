@@ -13,6 +13,6 @@ export interface IActiveScenarioManager {
   getScenarioHistory: (id: string) => Promise<ReadonlyArray<Event>>;
   updateScenario: (
     id: string,
-    events: ReadonlyArray<Event>
+    events: ReadonlyArray<ScenarioEvent>
   ) => Promise<ScenarioState>;
 }

@@ -1,29 +1,8 @@
 import { createEventRunner } from '../../src/services/eventRunner';
-import { EventType, EventProperties } from '../../src/types';
 import { ActionType } from '../../src/actions';
 import { createActionsMock } from '../actions';
-import { createScenarioState, createVariableMock } from '../models';
-import { ScenarioEvent } from '../../src/models/scenarioEvent';
-
-const createEvent = (props?: Partial<ScenarioEvent>) =>
-  ({
-    _id: '1',
-    activeScenarioId: '1',
-    name: 'event',
-    action: ActionType.AddValueToVariable,
-    type: EventType.Activated,
-    properties: createProperties(),
-    createdAt: new Date('2018-08-08'),
-    updatedAt: new Date('2018-08-08'),
-    ...props
-  } as ScenarioEvent);
-
-const createProperties = (props?: Partial<EventProperties>) => ({
-  value: 1,
-  destinationVariable: 'variable',
-  sourceVariable: 'variable',
-  ...props
-});
+import { createScenarioState, createVariable, createEvent } from '../models';
+import { createProperties } from '../types';
 
 describe('eventRunner', () => {
   describe('.triggerEvent', () => {
@@ -34,7 +13,7 @@ describe('eventRunner', () => {
 
       const scenario = createScenarioState({
         variables: [
-          createVariableMock({
+          createVariable({
             name: destinationVariable,
             value
           })
@@ -43,7 +22,7 @@ describe('eventRunner', () => {
 
       const returnedScenario = createScenarioState({
         variables: [
-          createVariableMock({
+          createVariable({
             name: destinationVariable,
             value: newValue
           })

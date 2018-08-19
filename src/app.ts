@@ -23,7 +23,7 @@ app.use('/', indexRouter);
 connectToDatabase();
 
 const activeScenarioManager = createActiveScenarioManager();
-const eventRunner = createEventRunner(actions, activeScenarioManager);
+const eventRunner = createEventRunner(actions);
 
 const event: ScenarioEvent = {
   id: '1',
@@ -36,7 +36,5 @@ const event: ScenarioEvent = {
     destinationVariable: 'variable'
   }
 };
-
-eventRunner.triggerEvent(event);
 
 export default app;

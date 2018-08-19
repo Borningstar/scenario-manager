@@ -2,7 +2,10 @@ import { ScenarioEvent } from '../types';
 import { ActiveScenario } from '../models/activeScenario';
 
 export interface IEventRunner {
-  triggerEvent: (event: ScenarioEvent) => void;
+  processEvents: (
+    event: ReadonlyArray<ScenarioEvent>,
+    state: ActiveScenario
+  ) => ActiveScenario;
 }
 
 export interface IActiveScenarioManager {

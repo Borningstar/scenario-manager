@@ -1,42 +1,42 @@
 import { ScenarioEvent } from '../types';
 import { IActions, ActionType } from '../actions';
 import { IEventRunner, IActiveScenarioManager } from '.';
+import { ActiveScenario } from '../models/activeScenario';
 
-const triggerEvent = async (
-  event: ScenarioEvent,
-  actions: IActions,
-  activeScenarioManager: IActiveScenarioManager
-) => {
-  const activeScenario = await activeScenarioManager.getScenario(
-    event.activeScenarioId
-  );
+const triggerEvent = (
+  events: ReadonlyArray<ScenarioEvent>,
+  scenario: ActiveScenario,
+  actions: IActions
+): ActiveScenario => {
+  let updatedScenario = scenario;
 
-  switch (event.action) {
-    case ActionType.AddValueToVariable:
-      if (typeof event.properties.value !== 'number') {
-        throw new Error(
-          `Value type in event properties it not a number: ${JSON.stringify(
-            event
-          )}`
+  events.forEach(event => {
+    switch (event.action) {
+      case ActionType.AddValueToVariable:
+        if (typeof event.properties.value !== 'number') {
+          throw new Error(
+            `Value type in event properties is not a number: ${JSON.stringify(
+              events
+            )}`
+          );
+        }
+
+        updatedScenario = actions.addValueToVariable(
+          scenario,
+          event.properties.value,
+          event.properties.destinationVariable
         );
-      }
 
-      const newState = actions.addValueToVariable(
-        activeScenario,
-        event.properties.value,
-        event.properties.destinationVariable
-      );
+        break;
+    }
+  });
 
-      activeScenarioManager.updateScenario(newState);
-
-      break;
-  }
+  return updatedScenario;
 };
 
-export const createEventRunner = (
-  actions: IActions,
-  stateManager: IActiveScenarioManager
-): IEventRunner => ({
-  triggerEvent: (event: ScenarioEvent) =>
-    triggerEvent(event, actions, stateManager)
+export const createEventRunner = (actions: IActions): IEventRunner => ({
+  processEvents: (
+    event: ReadonlyArray<ScenarioEvent>,
+    scenario: ActiveScenario
+  ) => triggerEvent(event, scenario, actions)
 });

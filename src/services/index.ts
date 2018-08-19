@@ -1,4 +1,3 @@
-import { ActiveScenario } from '../models/activeScenario';
 import { ScenarioEvent } from '../models/scenarioEvent';
 import { ScenarioState } from '../models/scenarioState';
 
@@ -6,7 +5,7 @@ export interface IEventRunner {
   processEvents: (
     event: ReadonlyArray<ScenarioEvent>,
     scenario: ScenarioState
-  ) => ActiveScenario;
+  ) => ScenarioState;
 }
 
 export interface IActiveScenarioManager {

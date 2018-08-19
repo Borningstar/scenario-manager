@@ -1,6 +1,8 @@
 import { createActiveScenarioManager } from '../../src/services/activeScenarioManager';
 import * as as from '../../src/models/activeScenario';
 import { createScenarioState } from '../models';
+import { createEventRunner } from '../../src/services/eventRunner';
+import { createEventRunnerMock } from '.';
 
 describe('activeScenarioManager', () => {
   beforeEach(() => {
@@ -8,8 +10,9 @@ describe('activeScenarioManager', () => {
   });
 
   describe('.getScenario', () => {
-    it('should call ActiveScenarioModel.findById', async () => {
-      const sut = createActiveScenarioManager();
+    it('should call ActiveScenarioModel.findById and eventRunner.processEvents if scenario not cached', async () => {
+      const eventRunner = createEventRunnerMock();
+      const sut = createActiveScenarioManager(eventRunner);
 
       const id = '1';
 

@@ -1,4 +1,4 @@
-import { IActiveScenarioManager } from '.';
+import { IActiveScenarioManager, IEventRunner } from '.';
 import { ActiveScenarioModel } from '../models/activeScenario';
 import { ScenarioState } from '../models/scenarioState';
 
@@ -25,7 +25,9 @@ const getScenarioHistory = async (
   throw new Error('Not implemented');
 };
 
-export const createActiveScenarioManager = (): IActiveScenarioManager => ({
+export const createActiveScenarioManager = (
+  eventRunner: IEventRunner
+): IActiveScenarioManager => ({
   getScenario: (id: string) => getScenario(id),
   getScenarioHistory: (id: string) => getScenarioHistory(id),
   updateScenario: (id: string, events: ReadonlyArray<Event>) =>

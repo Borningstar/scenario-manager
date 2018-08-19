@@ -1,16 +1,16 @@
-import { ScenarioEvent } from '../types';
 import { IActions, ActionType } from '../actions';
 import { IEventRunner } from '.';
-import { ActiveScenario } from '../models/activeScenario';
+import { ScenarioEvent } from '../models/scenarioEvent';
+import { ScenarioState } from '../models/scenarioState';
 
 const processEvents = (
   events: ReadonlyArray<ScenarioEvent>,
-  scenario: ActiveScenario,
+  state: ScenarioState,
   actions: IActions,
   index: number = 0
-): ActiveScenario => {
+): ScenarioState => {
   if (index >= events.length) {
-    return scenario;
+    return state;
   }
 
   const event = events[index];
@@ -26,7 +26,7 @@ const processEvents = (
       }
 
       const updatedScenario = actions.addValueToVariable(
-        scenario,
+        state,
         event.properties.value,
         event.properties.destinationVariable
       );
@@ -38,6 +38,6 @@ const processEvents = (
 export const createEventRunner = (actions: IActions): IEventRunner => ({
   processEvents: (
     event: ReadonlyArray<ScenarioEvent>,
-    scenario: ActiveScenario
+    scenario: ScenarioState
   ) => processEvents(event, scenario, actions)
 });

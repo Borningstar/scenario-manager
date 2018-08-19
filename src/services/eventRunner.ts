@@ -1,42 +1,43 @@
 import { ScenarioEvent } from '../types';
 import { IActions, ActionType } from '../actions';
-import { IEventRunner, IActiveScenarioManager } from '.';
+import { IEventRunner } from '.';
 import { ActiveScenario } from '../models/activeScenario';
 
-const triggerEvent = (
+const processEvents = (
   events: ReadonlyArray<ScenarioEvent>,
   scenario: ActiveScenario,
-  actions: IActions
+  actions: IActions,
+  index: number = 0
 ): ActiveScenario => {
-  let updatedScenario = scenario;
+  if (index >= events.length) {
+    return scenario;
+  }
 
-  events.forEach(event => {
-    switch (event.action) {
-      case ActionType.AddValueToVariable:
-        if (typeof event.properties.value !== 'number') {
-          throw new Error(
-            `Value type in event properties is not a number: ${JSON.stringify(
-              events
-            )}`
-          );
-        }
+  const event = events[index];
 
-        updatedScenario = actions.addValueToVariable(
-          scenario,
-          event.properties.value,
-          event.properties.destinationVariable
+  switch (event.action) {
+    case ActionType.AddValueToVariable:
+      if (typeof event.properties.value !== 'number') {
+        throw new Error(
+          `Value type in event properties is not a number: ${JSON.stringify(
+            event
+          )}`
         );
+      }
 
-        break;
-    }
-  });
+      const updatedScenario = actions.addValueToVariable(
+        scenario,
+        event.properties.value,
+        event.properties.destinationVariable
+      );
 
-  return updatedScenario;
+      return processEvents(events, updatedScenario, actions, index + 1);
+  }
 };
 
 export const createEventRunner = (actions: IActions): IEventRunner => ({
   processEvents: (
     event: ReadonlyArray<ScenarioEvent>,
     scenario: ActiveScenario
-  ) => triggerEvent(event, scenario, actions)
+  ) => processEvents(event, scenario, actions)
 });

@@ -102,8 +102,6 @@ describe('eventRunner', () => {
       });
 
       it('should throw when properties value is not a number', () => {
-        expect.assertions(1);
-
         const sut = createEventRunner(createActionsMock());
 
         const events = [
@@ -119,7 +117,7 @@ describe('eventRunner', () => {
           sut.processEvents(events, createActiveScenario())
         ).toThrowError(
           `Value type in event properties is not a number: ${JSON.stringify(
-            events
+            events[0]
           )}`
         );
       });

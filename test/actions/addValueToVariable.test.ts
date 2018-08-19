@@ -1,6 +1,6 @@
 import { VariableType } from '../../src/types';
 import addXToYAction from '../../src/actions/addValueToVariable';
-import { createActiveScenario, createVariableMock } from '../models';
+import { createVariableMock, createScenarioState } from '../models';
 
 describe('addValueToVariable', () => {
   const variableName = 'variable';
@@ -14,24 +14,20 @@ describe('addValueToVariable', () => {
       value: variableValue
     });
 
-    const activeScenario = createActiveScenario({
+    const state = createScenarioState({
       variables: [existingVariable]
     });
 
-    const updatedScenario = addXToYAction(
-      activeScenario,
-      valueToAdd,
-      variableName
-    );
+    const updatedScenario = addXToYAction(state, valueToAdd, variableName);
 
-    const expectedUpdatedScenario = activeScenario;
+    const expectedUpdatedScenario = state;
     expectedUpdatedScenario.variables[0].value = variableValue + valueToAdd;
 
     expect(updatedScenario).toEqual(expectedUpdatedScenario);
   });
 
   it('should throw error if variable doesnt exist in state', () => {
-    const state = createActiveScenario({
+    const state = createScenarioState({
       variables: []
     });
 
@@ -43,7 +39,7 @@ describe('addValueToVariable', () => {
   });
 
   it('should throw error if variable type isnt number', () => {
-    const state = createActiveScenario({
+    const state = createScenarioState({
       variables: [
         createVariableMock({
           name: variableName,
@@ -61,7 +57,7 @@ describe('addValueToVariable', () => {
   it('should throw error if variable value isnt number', () => {
     const variableValue = '1';
 
-    const state = createActiveScenario({
+    const state = createScenarioState({
       variables: [
         createVariableMock({
           name: variableName,

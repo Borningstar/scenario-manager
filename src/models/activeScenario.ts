@@ -1,29 +1,19 @@
 import { prop, Typegoose, arrayProp } from 'typegoose';
-import { Team } from '../types';
-import { Variable } from './variable';
+
+import { ScenarioState } from './scenarioState';
+import { ScenarioEvent } from './scenarioEvent';
 
 export class ActiveScenario extends Typegoose {
   _id: string;
 
   @prop({ required: true })
-  scenarioId: string;
+  initialState: ScenarioState;
 
-  @prop({ default: false })
-  completed: boolean;
-
-  @prop({ default: false })
-  paused: boolean;
-
-  @prop({ default: false })
-  started: boolean;
-
-  @prop()
-  teams?: ReadonlyArray<Team>;
-
-  @arrayProp({ items: Variable })
-  variables?: ReadonlyArray<Variable>;
+  @arrayProp({ items: ScenarioEvent })
+  events: ReadonlyArray<ScenarioEvent>;
 }
 
 export const ActiveScenarioModel = new ActiveScenario().getModelForClass(
-  ActiveScenario
+  ActiveScenario,
+  { schemaOptions: { timestamps: true } }
 );

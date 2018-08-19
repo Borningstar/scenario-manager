@@ -1,6 +1,6 @@
 import { createActiveScenarioManager } from '../../src/services/activeScenarioManager';
 import * as as from '../../src/models/activeScenario';
-import { createActiveScenario } from '../models';
+import { createScenarioState } from '../models';
 
 describe('activeScenarioManager', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('activeScenarioManager', () => {
       const id = '1';
 
       as.ActiveScenarioModel.findById = jest.fn(async () =>
-        createActiveScenario()
+        createScenarioState()
       );
 
       await sut.getScenario(id);
@@ -30,7 +30,7 @@ describe('activeScenarioManager', () => {
 
       as.ActiveScenarioModel.updateOne = jest.fn();
 
-      const activeScenario = createActiveScenario();
+      const activeScenario = createScenarioState();
 
       await sut.updateScenario(activeScenario);
 

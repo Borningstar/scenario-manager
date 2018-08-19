@@ -1,8 +1,8 @@
 import addValueToVariable from './addValueToVariable';
-import { ActiveScenario } from '../models/activeScenario';
+import { ScenarioState } from '../models/scenarioState';
 
 export interface IAddValueToVariable {
-  (state: ActiveScenario, value: number, variable: string): ActiveScenario;
+  (state: ScenarioState, value: number, variable: string): ScenarioState;
 }
 
 export interface IActions {
@@ -14,11 +14,8 @@ export enum ActionType {
 }
 
 const actions: IActions = {
-  addValueToVariable: (
-    state: ActiveScenario,
-    value: number,
-    variable: string
-  ) => addValueToVariable(state, value, variable)
+  addValueToVariable: (state: ScenarioState, value: number, variable: string) =>
+    addValueToVariable(state, value, variable)
 };
 
 export default actions;

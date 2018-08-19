@@ -1,14 +1,19 @@
-import { ScenarioEvent } from '../types';
 import { ActiveScenario } from '../models/activeScenario';
+import { ScenarioEvent } from '../models/scenarioEvent';
+import { ScenarioState } from '../models/scenarioState';
 
 export interface IEventRunner {
   processEvents: (
     event: ReadonlyArray<ScenarioEvent>,
-    state: ActiveScenario
+    scenario: ScenarioState
   ) => ActiveScenario;
 }
 
 export interface IActiveScenarioManager {
-  getScenario: (id: string) => Promise<ActiveScenario>;
-  updateScenario: (state: ActiveScenario) => Promise<void>;
+  getScenario: (id: string) => Promise<ScenarioState>;
+  getScenarioHistory: (id: string) => Promise<ReadonlyArray<Event>>;
+  updateScenario: (
+    id: string,
+    events: ReadonlyArray<Event>
+  ) => Promise<ScenarioState>;
 }

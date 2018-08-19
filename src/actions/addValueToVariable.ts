@@ -1,28 +1,23 @@
 import { VariableType } from '../types';
 import { IAddValueToVariable } from '.';
-import { ActiveScenario } from '../models/activeScenario';
-import { Variable } from '../models/variable';
+import { ScenarioState } from '../models/scenarioState';
 
 /**
  * Adds X value to variable Y in state and returns updated state
- * @param activeScenario Current scenario state
+ * @param state Current scenario state
  * @param value Value to add
  * @param variable Name of variable to add value to
  */
 const addValueToVariable: IAddValueToVariable = (
-  activeScenario: ActiveScenario,
+  state: ScenarioState,
   value: number,
   variable: string
-): ActiveScenario => {
-  const variableToUpdate = activeScenario.variables.find(
-    v => v.name === variable
-  );
+): ScenarioState => {
+  const variableToUpdate = state.variables.find(v => v.name === variable);
 
   if (!variableToUpdate) {
     throw new Error(
-      `Unable to find variable ${variable} in state: ${JSON.stringify(
-        activeScenario
-      )}`
+      `Unable to find variable ${variable} in state: ${JSON.stringify(state)}`
     );
   }
 
@@ -38,7 +33,7 @@ const addValueToVariable: IAddValueToVariable = (
 
   variableToUpdate.value += value;
 
-  return activeScenario;
+  return state;
 };
 
 export default addValueToVariable;

@@ -1,20 +1,22 @@
 import { createEventRunner } from '../../src/services/eventRunner';
-import { EventType, EventProperties, ScenarioEvent } from '../../src/types';
+import { EventType, EventProperties } from '../../src/types';
 import { ActionType } from '../../src/actions';
-import { IActiveScenarioManager } from '../../src/services';
 import { createActionsMock } from '../actions';
-import { createActiveScenario, createVariableMock } from '../models';
-import { stat } from 'fs';
+import { createScenarioState, createVariableMock } from '../models';
+import { ScenarioEvent } from '../../src/models/scenarioEvent';
 
-const createEvent = (props?: Partial<ScenarioEvent>) => ({
-  id: '1',
-  activeScenarioId: '1',
-  name: 'event',
-  action: ActionType.AddValueToVariable,
-  type: EventType.Activated,
-  properties: createProperties(),
-  ...props
-});
+const createEvent = (props?: Partial<ScenarioEvent>) =>
+  ({
+    _id: '1',
+    activeScenarioId: '1',
+    name: 'event',
+    action: ActionType.AddValueToVariable,
+    type: EventType.Activated,
+    properties: createProperties(),
+    createdAt: new Date('2018-08-08'),
+    updatedAt: new Date('2018-08-08'),
+    ...props
+  } as ScenarioEvent);
 
 const createProperties = (props?: Partial<EventProperties>) => ({
   value: 1,
@@ -30,7 +32,7 @@ describe('eventRunner', () => {
       const newValue = 2;
       const destinationVariable = 'variable';
 
-      const scenario = createActiveScenario({
+      const scenario = createScenarioState({
         variables: [
           createVariableMock({
             name: destinationVariable,
@@ -39,7 +41,7 @@ describe('eventRunner', () => {
         ]
       });
 
-      const returnedScenario = createActiveScenario({
+      const returnedScenario = createScenarioState({
         variables: [
           createVariableMock({
             name: destinationVariable,
@@ -74,7 +76,7 @@ describe('eventRunner', () => {
           addValueToVariable: jest.fn()
         });
 
-        const scenario = createActiveScenario();
+        const scenario = createScenarioState();
 
         const sut = createEventRunner(actionsMock);
 
@@ -114,7 +116,7 @@ describe('eventRunner', () => {
         ];
 
         expect(() =>
-          sut.processEvents(events, createActiveScenario())
+          sut.processEvents(events, createScenarioState())
         ).toThrowError(
           `Value type in event properties is not a number: ${JSON.stringify(
             events[0]

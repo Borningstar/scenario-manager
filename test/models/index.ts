@@ -1,8 +1,9 @@
 import { VariableType } from '../../src/types';
 import { Variable } from '../../src/models/variable';
 import { ActiveScenario } from '../../src/models/activeScenario';
+import { ScenarioState } from '../../src/models/scenarioState';
 
-export const createActiveScenario = (props?: Partial<ActiveScenario>) =>
+export const createScenarioState = (props?: Partial<ScenarioState>) =>
   ({
     _id: 'scenario',
     scenarioId: 'scenario',
@@ -12,7 +13,7 @@ export const createActiveScenario = (props?: Partial<ActiveScenario>) =>
     teams: [],
     variables: [],
     ...props
-  } as ActiveScenario);
+  } as ScenarioState);
 
 export const createVariableMock = (props?: Partial<Variable>) =>
   ({

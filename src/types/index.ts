@@ -1,5 +1,5 @@
-import { ActionType } from '../actions';
 import { Variable } from '../models/variable';
+import { ScenarioEvent } from '../models/scenarioEvent';
 
 export type Scenario = Readonly<{
   id: string;
@@ -7,15 +7,6 @@ export type Scenario = Readonly<{
   teams: ReadonlyArray<Team>;
   variables: ReadonlyArray<Variable>;
   events: ReadonlyArray<ScenarioEvent>;
-}>;
-
-export type ScenarioEvent = Readonly<{
-  id: string;
-  activeScenarioId: string;
-  name: string;
-  action: ActionType;
-  type: EventType;
-  properties: EventProperties;
 }>;
 
 export type EventProperties = Readonly<{

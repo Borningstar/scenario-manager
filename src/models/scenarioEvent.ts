@@ -2,6 +2,9 @@ import { prop, Typegoose } from 'typegoose';
 import { ActionType } from '../actions';
 import { EventType, EventProperties } from '../types';
 
+/**
+ * An event that's applied to a scenario
+ */
 export class ScenarioEvent extends Typegoose {
   _id: string;
 

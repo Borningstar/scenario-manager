@@ -45,10 +45,13 @@ const updateScenario = async (
   return updatedState;
 };
 
+// TODO: Check what happens when it fails to find
 const getScenarioHistory = async (
   id: string
-): Promise<ReadonlyArray<Event>> => {
-  throw new Error('Not implemented');
+): Promise<ReadonlyArray<ScenarioEvent>> => {
+  const model = await ActiveScenarioModel.findById(id);
+
+  return model.events;
 };
 
 export const createActiveScenarioManager = (

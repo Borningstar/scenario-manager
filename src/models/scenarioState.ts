@@ -2,6 +2,9 @@ import { prop, Typegoose, arrayProp } from 'typegoose';
 import { Team } from '../types';
 import { Variable } from './variable';
 
+/**
+ * Represents scenario state, either initial or after applying events
+ */
 export class ScenarioState extends Typegoose {
   _id: string;
 

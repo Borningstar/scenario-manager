@@ -1,5 +1,5 @@
 import { createActiveScenarioManager } from '../../src/services/activeScenarioManager';
-import * as asm from '../../src/models/activeScenario';
+import * as activeScenario from '../../src/models/activeScenario';
 import {
   createScenarioState,
   createActiveScenario,
@@ -9,13 +9,13 @@ import { createEventRunnerMock } from '.';
 
 describe('activeScenarioManager', () => {
   beforeEach(() => {
-    spyOn(asm, 'ActiveScenarioModel');
+    spyOn(activeScenario, 'ActiveScenarioModel');
   });
 
   describe('.getScenario', () => {
     it(
-      'should call ActiveScenarioModel.findById and eventRunner.processEvents' +
-        ' if scenario not cached',
+      'should get state, events from DB and process if state not cached' +
+        ' and cached state otherwise',
       async () => {
         const id = '1';
         const state = createScenarioState({ activeScenarioId: id });
@@ -24,7 +24,9 @@ describe('activeScenarioManager', () => {
           initialState: createScenarioState({ activeScenarioId: id })
         });
 
-        asm.ActiveScenarioModel.findById = jest.fn(async () => scenario);
+        activeScenario.ActiveScenarioModel.findById = jest.fn(
+          async () => scenario
+        );
 
         const eventRunnerMock = createEventRunnerMock({
           processEvents: jest.fn(() => state)
@@ -33,54 +35,80 @@ describe('activeScenarioManager', () => {
         const sut = createActiveScenarioManager(eventRunnerMock);
 
         const dbScenario = await sut.getScenario(id);
+        const uncachedScenario = await sut.getScenario(id);
         const cachedScenario = await sut.getScenario(id);
 
-        expect(asm.ActiveScenarioModel.findById).toHaveBeenCalledTimes(1);
-        expect(asm.ActiveScenarioModel.findById).toBeCalledWith(id);
+        expect(
+          activeScenario.ActiveScenarioModel.findById
+        ).toHaveBeenCalledTimes(1);
+        expect(activeScenario.ActiveScenarioModel.findById).toBeCalledWith(id);
         expect(eventRunnerMock.processEvents).toHaveBeenCalledTimes(1);
         expect(dbScenario).toEqual(scenario.initialState);
-        expect(cachedScenario).toEqual(scenario.initialState);
+        expect(uncachedScenario).toEqual(scenario.initialState);
+        expect(cachedScenario).toEqual(uncachedScenario);
       }
     );
   });
 
   describe('.updateScenario', () => {
-    it(
-      'should call ActiveScenarioModel.updateOne and' +
-        ' eventRunner.processEvents',
-      async () => {
-        const returnedState = createScenarioState();
-        const eventRunnerMock = createEventRunnerMock({
-          processEvents: jest.fn(() => returnedState)
-        });
+    it('should update event in DB and return updated state', async () => {
+      const id = '1';
 
-        asm.ActiveScenarioModel.updateOne = jest.fn();
-        asm.ActiveScenarioModel.findById = jest.fn(async () => returnedState);
+      const returnedState = createScenarioState({
+        activeScenarioId: id
+      });
+      const eventRunnerMock = createEventRunnerMock({
+        processEvents: jest.fn(() => returnedState)
+      });
 
-        const events = [createEvent()];
-        const id = '1';
+      activeScenario.ActiveScenarioModel.updateOne = jest.fn();
+      activeScenario.ActiveScenarioModel.findById = jest.fn(
+        async () => returnedState
+      );
 
-        const sut = createActiveScenarioManager(eventRunnerMock);
+      const events = [createEvent({ activeScenarioId: id })];
 
-        const updatedState = await sut.updateScenario(id, events);
+      const sut = createActiveScenarioManager(eventRunnerMock);
 
-        expect(asm.ActiveScenarioModel.updateOne).toHaveBeenCalledTimes(1);
-        expect(asm.ActiveScenarioModel.updateOne).toBeCalledWith(
-          {
-            _id: id
-          },
-          {
-            $push: { $each: events }
-          }
-        );
+      const updatedState = await sut.updateScenario(id, events);
 
-        expect(updatedState).toEqual(returnedState);
-        expect(eventRunnerMock.processEvents).toHaveBeenCalledTimes(1);
-        expect(eventRunnerMock.processEvents).toBeCalledWith(
-          events,
-          returnedState
-        );
-      }
-    );
+      expect(
+        activeScenario.ActiveScenarioModel.updateOne
+      ).toHaveBeenCalledTimes(1);
+      expect(activeScenario.ActiveScenarioModel.updateOne).toBeCalledWith(
+        {
+          _id: id
+        },
+        {
+          $push: { $each: events }
+        }
+      );
+
+      expect(updatedState).toEqual(returnedState);
+      expect(eventRunnerMock.processEvents).toHaveBeenCalledTimes(1);
+      expect(eventRunnerMock.processEvents).toBeCalledWith(
+        events,
+        returnedState
+      );
+    });
+  });
+
+  describe('.getScenarioHistory', () => {
+    it('should return array of events for active scenario', async () => {
+      const id = '1';
+      const events = [createEvent()];
+      const activeScenarioModel = createActiveScenario({ events: events });
+
+      activeScenario.ActiveScenarioModel.findById = jest.fn(
+        async () => activeScenarioModel
+      );
+
+      const sut = createActiveScenarioManager(createEventRunnerMock());
+
+      const history = await sut.getScenarioHistory(id);
+
+      expect(history).toEqual(events);
+      expect(activeScenario.ActiveScenarioModel.findById).toBeCalledWith(id);
+    });
   });
 });

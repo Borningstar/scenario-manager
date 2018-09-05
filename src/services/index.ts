@@ -10,7 +10,7 @@ export interface IEventRunner {
 
 export interface IActiveScenarioManager {
   getScenario: (id: string) => Promise<ScenarioState>;
-  getScenarioHistory: (id: string) => Promise<ReadonlyArray<Event>>;
+  getScenarioHistory: (id: string) => Promise<ReadonlyArray<ScenarioEvent>>;
   updateScenario: (
     id: string,
     events: ReadonlyArray<ScenarioEvent>

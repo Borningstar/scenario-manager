@@ -1,7 +1,11 @@
 import { createEventRunner } from '../../src/services/eventRunner';
 import { ActionType } from '../../src/actions';
 import { createActionsMock } from '../actions';
-import { createScenarioState, createVariable, createEvent } from '../models';
+import {
+  createScenarioState,
+  createVariable,
+  createScenarioEvent
+} from '../models';
 import { createProperties } from '../types';
 import { IEventRunnerMiddleware } from '../../src/services';
 
@@ -37,10 +41,10 @@ describe('eventRunner', () => {
       const sut = createEventRunner(actionsMock);
 
       const events = [
-        createEvent({
+        createScenarioEvent({
           action: ActionType.AddValueToVariable
         }),
-        createEvent({
+        createScenarioEvent({
           action: ActionType.AddValueToVariable
         })
       ];
@@ -72,10 +76,10 @@ describe('eventRunner', () => {
       const sut = createEventRunner(actionsMock, [middleware]);
 
       const events = [
-        createEvent({
+        createScenarioEvent({
           action: ActionType.AddValueToVariable
         }),
-        createEvent({
+        createScenarioEvent({
           action: ActionType.AddValueToVariable
         })
       ];
@@ -99,7 +103,7 @@ describe('eventRunner', () => {
         const destinationVariable = 'variable';
 
         const events = [
-          createEvent({
+          createScenarioEvent({
             action: ActionType.AddValueToVariable,
             properties: createProperties({
               value,
@@ -122,7 +126,7 @@ describe('eventRunner', () => {
         const sut = createEventRunner(createActionsMock());
 
         const events = [
-          createEvent({
+          createScenarioEvent({
             action: ActionType.AddValueToVariable,
             properties: createProperties({
               value: 'a'

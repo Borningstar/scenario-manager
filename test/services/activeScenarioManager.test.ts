@@ -3,7 +3,7 @@ import * as activeScenario from '../../src/models/activeScenario';
 import {
   createScenarioState,
   createActiveScenario,
-  createEvent
+  createScenarioEvent
 } from '../models';
 import { createEventRunnerMock } from '.';
 import { ModelNotFoundError } from '../../src/utility';
@@ -93,7 +93,7 @@ describe('activeScenarioManager', () => {
         async () => returnedState
       );
 
-      const events = [createEvent({ activeScenarioId: id })];
+      const events = [createScenarioEvent({ activeScenarioId: id })];
 
       const sut = new ActiveScenarioManager(eventRunnerMock);
 
@@ -156,7 +156,7 @@ describe('activeScenarioManager', () => {
   describe('.getScenarioHistory', () => {
     it('should return array of events for active scenario', async () => {
       const id = '1';
-      const events = [createEvent()];
+      const events = [createScenarioEvent()];
       const activeScenarioModel = createActiveScenario({ events: events });
 
       activeScenario.ActiveScenarioModel.findById = jest.fn(

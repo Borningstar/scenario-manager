@@ -5,10 +5,16 @@ import logger from 'morgan';
 
 import { indexRouter } from './routes';
 import { connectToDatabase } from './services/database';
-import { createActiveScenarioManager } from './services/activeScenarioManager';
 import { createEventRunner } from './services/eventRunner';
 import actions, { ActionType } from './actions';
-import { ScenarioEvent, EventType } from './types';
+import { EventType } from './types';
+import { ScenarioEvent } from './models/scenarioEvent';
+import { ObjectId } from 'bson';
+import ActiveScenarioManager from './services/activeScenarioManager';
+
+// import { ActiveScenarioModel } from '../models/activeScenario';
+// import { VariableType } from '../types';
+// import { ScenarioState, ScenarioStateModel } from '../models/scenarioState';
 
 const app = express();
 
@@ -20,21 +26,52 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
-connectToDatabase();
+const initialiseApp = async () => {
+  await connectToDatabase();
 
-const activeScenarioManager = createActiveScenarioManager();
-const eventRunner = createEventRunner(actions);
+  const eventRunner = createEventRunner(actions);
+  const activeScenarioManager = new ActiveScenarioManager(eventRunner);
 
-const event: ScenarioEvent = {
-  id: '1',
-  activeScenarioId: '5b73a9f6ede86a23a815c980',
-  name: 'Event',
-  action: ActionType.AddValueToVariable,
-  type: EventType.Activated,
-  properties: {
-    value: 4,
-    destinationVariable: 'variable'
-  }
+  // Way to quickly add scenarios until adding functionality complete
+  // const scenario = new ActiveScenarioModel({
+  //   scenarioId: '1',
+  //   initialState: new ScenarioStateModel({
+  //     activeScenarioId: '1',
+  //     variables: [
+  //       {
+  //         name: 'variable',
+  //         type: VariableType.number
+  //       }
+  //     ]
+  //   })
+  // });
+
+  // try {
+  //   console.log('New scenario: ' + scenario);
+
+  //   await scenario.save();
+  //   const s = await ActiveScenarioModel.findOne();
+
+  //   console.log('Created scenario: ' + s);
+  // } catch (e) {
+  //   console.error('Error adding scenario: ' + JSON.stringify(e));
+  // }
 };
+
+initialiseApp();
+
+// const event: ScenarioEvent = {
+//   _id: '1',
+//   activeScenarioId: '5b73a9f6ede86a23a815c980',
+//   name: 'Event',
+//   action: ActionType.AddValueToVariable,
+//   type: EventType.Activated,
+//   properties: {
+//     value: 4,
+//     destinationVariable: 'variable'
+//   }
+// };
+
+// activeScenarioManager.getScenario('1');
 
 export default app;

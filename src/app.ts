@@ -11,6 +11,7 @@ import { EventType } from './types';
 import ActiveScenarioManager from './services/activeScenarioManager';
 import { ScenarioEventModel } from './models/scenarioEvent';
 import eventRunnerLogger from './utility/eventRunnerLogger';
+import { createConsoleLogger } from './services/consoleLogger';
 
 // import { ActiveScenarioModel } from '../models/activeScenario';
 // import { VariableType } from '../types';
@@ -29,7 +30,9 @@ app.use('/', indexRouter);
 const initialiseApp = async () => {
   await connectToDatabase();
 
-  const eventRunner = createEventRunner(actions, [eventRunnerLogger]);
+  const logger = createConsoleLogger();
+
+  const eventRunner = createEventRunner(actions, [eventRunnerLogger(logger)]);
   const activeScenarioManager = new ActiveScenarioManager(eventRunner);
 
   // Way to quickly add scenarios until adding functionality complete

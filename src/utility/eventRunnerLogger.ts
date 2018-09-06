@@ -1,20 +1,20 @@
-import { IEventRunnerMiddleware } from '../services';
+import { IEventRunnerMiddleware, ILogger } from '../services';
 import { ScenarioState } from '../models/scenarioState';
 import { ScenarioEvent } from '../models/scenarioEvent';
 
-const eventRunnerLogger: IEventRunnerMiddleware = {
+const eventRunnerLogger = (logger: ILogger): IEventRunnerMiddleware => ({
   preEvent: (data: { state: ScenarioState; event: ScenarioEvent }) => {
-    console.log(`==================================`);
-    console.log(`Processing event, existing state: `);
-    console.log(JSON.stringify(data.state, undefined, 2));
-    console.log(`Event: `);
-    console.log(JSON.stringify(data.event, undefined, 2));
+    logger.logInfo(`==================================`);
+    logger.logInfo(`Processing event, existing state: `);
+    logger.logInfo(JSON.stringify(data.state, undefined, 2));
+    logger.logInfo(`Event: `);
+    logger.logInfo(JSON.stringify(data.event, undefined, 2));
   },
   postEvent: (data: { state: ScenarioState }) => {
-    console.log(`Finished processing event, updated state: `);
-    console.log(JSON.stringify(data.state, undefined, 2));
-    console.log(`==================================`);
+    logger.logInfo(`Finished processing event, updated state: `);
+    logger.logInfo(JSON.stringify(data.state, undefined, 2));
+    logger.logInfo(`==================================`);
   }
-};
+});
 
 export default eventRunnerLogger;

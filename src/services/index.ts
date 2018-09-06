@@ -31,3 +31,7 @@ export interface IActiveScenarioManager {
     events: ReadonlyArray<ScenarioEvent>
   ) => Promise<ScenarioState>;
 }
+
+export interface ILogger {
+  logInfo: (message: string) => void;
+}

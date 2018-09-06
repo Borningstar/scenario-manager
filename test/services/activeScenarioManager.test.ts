@@ -1,4 +1,4 @@
-import { createActiveScenarioManager } from '../../src/services/activeScenarioManager';
+import ActiveScenarioManager from '../../src/services/activeScenarioManager';
 import * as activeScenario from '../../src/models/activeScenario';
 import {
   createScenarioState,
@@ -6,6 +6,7 @@ import {
   createEvent
 } from '../models';
 import { createEventRunnerMock } from '.';
+import { ModelNotFoundError } from '../../src/utility';
 
 describe('activeScenarioManager', () => {
   beforeEach(() => {
@@ -32,7 +33,7 @@ describe('activeScenarioManager', () => {
           processEvents: jest.fn(() => state)
         });
 
-        const sut = createActiveScenarioManager(eventRunnerMock);
+        const sut = new ActiveScenarioManager(eventRunnerMock);
 
         const dbScenario = await sut.getScenario(id);
         const uncachedScenario = await sut.getScenario(id);
@@ -48,6 +49,32 @@ describe('activeScenarioManager', () => {
         expect(cachedScenario).toEqual(uncachedScenario);
       }
     );
+
+    it('should throw error when finding scenario throws error', async () => {
+      activeScenario.ActiveScenarioModel.findById = jest.fn(async () => {
+        throw new Error('error');
+      });
+
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
+
+      await expect(sut.getScenario('1')).rejects.toThrowError('error');
+    });
+
+    it('should throw not found error when active scenario not found', async () => {
+      activeScenario.ActiveScenarioModel.findById = jest.fn(
+        async () => undefined
+      );
+
+      const id = '1';
+      const expectedError = new ModelNotFoundError(
+        'Active Scenario not found with ID ' + id,
+        id
+      );
+
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
+
+      await expect(sut.getScenario(id)).rejects.toThrowError(expectedError);
+    });
   });
 
   describe('.updateScenario', () => {
@@ -68,7 +95,7 @@ describe('activeScenarioManager', () => {
 
       const events = [createEvent({ activeScenarioId: id })];
 
-      const sut = createActiveScenarioManager(eventRunnerMock);
+      const sut = new ActiveScenarioManager(eventRunnerMock);
 
       const updatedState = await sut.updateScenario(id, events);
 
@@ -85,10 +112,43 @@ describe('activeScenarioManager', () => {
       );
 
       expect(updatedState).toEqual(returnedState);
-      expect(eventRunnerMock.processEvents).toHaveBeenCalledTimes(1);
+      expect(eventRunnerMock.processEvents).toHaveBeenCalledTimes(2);
       expect(eventRunnerMock.processEvents).toBeCalledWith(
         events,
         returnedState
+      );
+    });
+
+    it('should throw error when finding scenario throws error', async () => {
+      activeScenario.ActiveScenarioModel.findById = jest.fn(async () =>
+        createActiveScenario()
+      );
+
+      activeScenario.ActiveScenarioModel.updateOne = jest.fn(async () => {
+        throw new Error('error');
+      });
+
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
+
+      await expect(sut.updateScenario('1', [])).rejects.toThrowError('error');
+    });
+
+    it('should throw not found error when active scenario not found', async () => {
+      activeScenario.ActiveScenarioModel.findById = jest.fn(
+        async () => undefined
+      );
+
+      const id = '1';
+
+      const expectedError = new ModelNotFoundError(
+        'Active Scenario not found with ID ' + id,
+        id
+      );
+
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
+
+      await expect(sut.updateScenario(id, [])).rejects.toThrowError(
+        expectedError
       );
     });
   });
@@ -103,12 +163,40 @@ describe('activeScenarioManager', () => {
         async () => activeScenarioModel
       );
 
-      const sut = createActiveScenarioManager(createEventRunnerMock());
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
 
       const history = await sut.getScenarioHistory(id);
 
       expect(history).toEqual(events);
       expect(activeScenario.ActiveScenarioModel.findById).toBeCalledWith(id);
+    });
+
+    it('should throw error when finding scenario throws error', async () => {
+      activeScenario.ActiveScenarioModel.findById = jest.fn(async () => {
+        throw new Error('error');
+      });
+
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
+
+      await expect(sut.getScenarioHistory('1')).rejects.toThrowError('error');
+    });
+
+    it('should throw not found error when active scenario not found', async () => {
+      activeScenario.ActiveScenarioModel.findById = jest.fn(
+        async () => undefined
+      );
+
+      const id = '1';
+      const expectedError = new ModelNotFoundError(
+        'Active Scenario not found with ID ' + id,
+        id
+      );
+
+      const sut = new ActiveScenarioManager(createEventRunnerMock());
+
+      await expect(sut.getScenarioHistory(id)).rejects.toThrowError(
+        expectedError
+      );
     });
   });
 });

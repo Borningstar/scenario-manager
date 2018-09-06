@@ -1,5 +1,5 @@
 import { IActiveScenarioManager, IEventRunner } from '.';
-import { ActiveScenarioModel } from '../models/activeScenario';
+import { ActiveScenarioModel, ActiveScenario } from '../models/activeScenario';
 import { ScenarioState } from '../models/scenarioState';
 import { ScenarioEvent } from '../models/scenarioEvent';
 import { ModelNotFoundError } from '../utility';
@@ -13,6 +13,15 @@ export default class ActiveScenarioManager implements IActiveScenarioManager {
     this.scenarios = [];
   }
 
+  private verifyModel(model: object, id: string) {
+    if (!model) {
+      throw new ModelNotFoundError(
+        'Active Scenario not found with ID ' + id,
+        id
+      );
+    }
+  }
+
   public getScenario = async (id: string): Promise<ScenarioState> => {
     let scenario = this.scenarios.find(s => s.activeScenarioId === id);
 
@@ -22,12 +31,7 @@ export default class ActiveScenarioManager implements IActiveScenarioManager {
 
     const model = await ActiveScenarioModel.findById(id);
 
-    if (!model) {
-      throw new ModelNotFoundError(
-        'Active Scenario not found with ID ' + id,
-        id
-      );
-    }
+    this.verifyModel(model, id);
 
     scenario = this.eventRunner.processEvents(model.events, model.initialState);
 
@@ -36,7 +40,6 @@ export default class ActiveScenarioManager implements IActiveScenarioManager {
     return scenario;
   };
 
-  // TODO: Check what happens when it fails to find
   public updateScenario = async (
     id: string,
     events: ReadonlyArray<ScenarioEvent>
@@ -55,11 +58,12 @@ export default class ActiveScenarioManager implements IActiveScenarioManager {
     return updatedState;
   };
 
-  // TODO: Check what happens when it fails to find
   public getScenarioHistory = async (
     id: string
   ): Promise<ReadonlyArray<ScenarioEvent>> => {
     const model = await ActiveScenarioModel.findById(id);
+
+    this.verifyModel(model, id);
 
     return model.events;
   };

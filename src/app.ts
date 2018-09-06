@@ -56,43 +56,18 @@ const initialiseApp = async () => {
   //   console.error('Error adding scenario: ' + JSON.stringify(e));
   // }
 
-  const events = [
-    new ScenarioEventModel({
-      activeScenarioId: '5b906a2199ef162644825d70',
-      name: 'Event',
-      action: ActionType.AddValueToVariable,
-      type: EventType.Activated,
-      properties: {
-        value: 4,
-        destinationVariable: 'variable'
-      }
-    })
-  ];
-
-  let scenario = await activeScenarioManager.getScenario(
-    '5b906a2199ef162644825d70'
-  );
-
-  console.log(scenario);
-
-  scenario = await activeScenarioManager.updateScenario(
-    '5b906a2199ef162644825d70',
-    events
-  );
-
-  console.log(scenario);
-
-  scenario = await activeScenarioManager.getScenario(
-    '5b906a2199ef162644825d70'
-  );
-
-  console.log(scenario);
-
-  const history = await activeScenarioManager.getScenarioHistory(
-    '5b906a2199ef162644825d70'
-  );
-
-  console.log(history);
+  // const events = [
+  //   new ScenarioEventModel({
+  //     activeScenarioId: '5b906a2199ef162644825d70',
+  //     name: 'Event',
+  //     action: ActionType.AddValueToVariable,
+  //     type: EventType.Activated,
+  //     properties: {
+  //       value: 4,
+  //       destinationVariable: 'variable'
+  //     }
+  //   })
+  // ];
 };
 
 initialiseApp();

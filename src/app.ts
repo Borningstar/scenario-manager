@@ -10,6 +10,7 @@ import actions, { ActionType } from './actions';
 import { EventType } from './types';
 import ActiveScenarioManager from './services/activeScenarioManager';
 import { ScenarioEventModel } from './models/scenarioEvent';
+import eventRunnerLogger from './utility/eventRunnerLogger';
 
 // import { ActiveScenarioModel } from '../models/activeScenario';
 // import { VariableType } from '../types';
@@ -28,7 +29,7 @@ app.use('/', indexRouter);
 const initialiseApp = async () => {
   await connectToDatabase();
 
-  const eventRunner = createEventRunner(actions);
+  const eventRunner = createEventRunner(actions, [eventRunnerLogger]);
   const activeScenarioManager = new ActiveScenarioManager(eventRunner);
 
   // Way to quickly add scenarios until adding functionality complete
@@ -56,18 +57,20 @@ const initialiseApp = async () => {
   //   console.error('Error adding scenario: ' + JSON.stringify(e));
   // }
 
-  // const events = [
-  //   new ScenarioEventModel({
-  //     activeScenarioId: '5b906a2199ef162644825d70',
-  //     name: 'Event',
-  //     action: ActionType.AddValueToVariable,
-  //     type: EventType.Activated,
-  //     properties: {
-  //       value: 4,
-  //       destinationVariable: 'variable'
-  //     }
-  //   })
-  // ];
+  const events = [
+    new ScenarioEventModel({
+      activeScenarioId: '5b906a2199ef162644825d70',
+      name: 'Event',
+      action: ActionType.AddValueToVariable,
+      type: EventType.Activated,
+      properties: {
+        value: 4,
+        destinationVariable: 'variable'
+      }
+    })
+  ];
+
+  activeScenarioManager.updateScenario('5b906a2199ef162644825d70', events);
 };
 
 initialiseApp();

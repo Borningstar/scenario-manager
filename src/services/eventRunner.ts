@@ -1,5 +1,5 @@
 import { IActions, ActionType } from '../actions';
-import { IEventRunner } from '.';
+import { IEventRunner, IEventRunnerMiddleware } from '.';
 import { ScenarioEvent } from '../models/scenarioEvent';
 import { ScenarioState } from '../models/scenarioState';
 
@@ -7,6 +7,7 @@ const processEvents = (
   events: ReadonlyArray<ScenarioEvent>,
   state: ScenarioState,
   actions: IActions,
+  middleware: ReadonlyArray<IEventRunnerMiddleware> = [],
   index: number = 0
 ): ScenarioState => {
   if (index >= events.length) {
@@ -14,6 +15,8 @@ const processEvents = (
   }
 
   const event = events[index];
+
+  middleware.forEach(mw => mw.preEvent({ state, event }));
 
   switch (event.action) {
     case ActionType.AddValueToVariable:
@@ -25,19 +28,30 @@ const processEvents = (
         );
       }
 
-      const updatedScenario = actions.addValueToVariable(
+      const updatedState = actions.addValueToVariable(
         state,
         event.properties.value,
         event.properties.destinationVariable
       );
 
-      return processEvents(events, updatedScenario, actions, index + 1);
+      middleware.forEach(mw => mw.postEvent({ state: updatedState, event }));
+
+      return processEvents(
+        events,
+        updatedState,
+        actions,
+        middleware,
+        index + 1
+      );
   }
 };
 
-export const createEventRunner = (actions: IActions): IEventRunner => ({
+export const createEventRunner = (
+  actions: IActions,
+  middleware?: ReadonlyArray<IEventRunnerMiddleware>
+): IEventRunner => ({
   processEvents: (
     event: ReadonlyArray<ScenarioEvent>,
     scenario: ScenarioState
-  ) => processEvents(event, scenario, actions)
+  ) => processEvents(event, scenario, actions, middleware)
 });

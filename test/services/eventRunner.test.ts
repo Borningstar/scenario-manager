@@ -3,6 +3,7 @@ import { ActionType } from '../../src/actions';
 import { createActionsMock } from '../actions';
 import { createScenarioState, createVariable, createEvent } from '../models';
 import { createProperties } from '../types';
+import { IEventRunnerMiddleware } from '../../src/services';
 
 describe('eventRunner', () => {
   describe('.triggerEvent', () => {
@@ -48,6 +49,41 @@ describe('eventRunner', () => {
 
       expect(actionsMock.addValueToVariable).toHaveBeenCalledTimes(2);
       expect(updatedScenario).toEqual(returnedScenario);
+    });
+    it('should call pre and post functions of middleware', () => {
+      const scenario = createScenarioState({
+        variables: [
+          createVariable({
+            name: 'variable',
+            value: 1
+          })
+        ]
+      });
+
+      const actionsMock = createActionsMock({
+        addValueToVariable: jest.fn(() => scenario)
+      });
+
+      const middleware: IEventRunnerMiddleware = {
+        preEvent: jest.fn(),
+        postEvent: jest.fn()
+      };
+
+      const sut = createEventRunner(actionsMock, [middleware]);
+
+      const events = [
+        createEvent({
+          action: ActionType.AddValueToVariable
+        }),
+        createEvent({
+          action: ActionType.AddValueToVariable
+        })
+      ];
+
+      sut.processEvents(events, scenario);
+
+      expect(middleware.postEvent).toHaveBeenCalledTimes(2);
+      expect(middleware.preEvent).toHaveBeenCalledTimes(2);
     });
     describe('when action type is AddValueToVariable', () => {
       it('should call AddValueToVariable with properties', () => {

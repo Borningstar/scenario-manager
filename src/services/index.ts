@@ -1,6 +1,21 @@
 import { ScenarioEvent } from '../models/scenarioEvent';
 import { ScenarioState } from '../models/scenarioState';
 
+export interface IEventRunnerMiddleware {
+  preEvent: (
+    data: {
+      state?: ScenarioState;
+      event?: ScenarioEvent;
+    }
+  ) => void;
+  postEvent: (
+    data: {
+      state?: ScenarioState;
+      event?: ScenarioEvent;
+    }
+  ) => void;
+}
+
 export interface IEventRunner {
   processEvents: (
     event: ReadonlyArray<ScenarioEvent>,

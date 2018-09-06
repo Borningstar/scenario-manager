@@ -1,6 +1,6 @@
 # TODO
 
-- Add logging middleware
+- Add event runner logging middleware
 
 - Add scenario/db integration tests
 

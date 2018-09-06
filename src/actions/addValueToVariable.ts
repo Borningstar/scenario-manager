@@ -25,6 +25,10 @@ const addValueToVariable: IAddValueToVariable = (
     throw new Error(`Variable type should be number: ${variableToUpdate.type}`);
   }
 
+  if (!variableToUpdate.value) {
+    variableToUpdate.value = 0;
+  }
+
   if (typeof variableToUpdate.value !== 'number') {
     throw new Error(
       `Variable value should be number: ${variableToUpdate.value}`

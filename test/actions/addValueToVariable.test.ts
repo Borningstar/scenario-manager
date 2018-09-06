@@ -26,6 +26,26 @@ describe('addValueToVariable', () => {
     expect(updatedScenario).toEqual(expectedUpdatedScenario);
   });
 
+  it('if existing value is undefined should treat it as 0', () => {
+    const valueToAdd = 1;
+
+    const existingVariable = createVariable({
+      name: variableName,
+      value: undefined
+    });
+
+    const state = createScenarioState({
+      variables: [existingVariable]
+    });
+
+    const updatedScenario = addXToYAction(state, valueToAdd, variableName);
+
+    const expectedUpdatedScenario = state;
+    expectedUpdatedScenario.variables[0].value = valueToAdd;
+
+    expect(updatedScenario).toEqual(expectedUpdatedScenario);
+  });
+
   it('should throw error if variable doesnt exist in state', () => {
     const state = createScenarioState({
       variables: []

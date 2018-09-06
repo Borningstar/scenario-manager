@@ -2,7 +2,7 @@ import { IEventRunnerMiddleware, ILogger } from '../services';
 import { ScenarioState } from '../models/scenarioState';
 import { ScenarioEvent } from '../models/scenarioEvent';
 
-const eventRunnerLogger = (logger: ILogger): IEventRunnerMiddleware => ({
+const createVentRunnerLogger = (logger: ILogger): IEventRunnerMiddleware => ({
   preEvent: (data: { state: ScenarioState; event: ScenarioEvent }) => {
     logger.logInfo(`==================================`);
     logger.logInfo(`Processing event, existing state: `);
@@ -17,4 +17,4 @@ const eventRunnerLogger = (logger: ILogger): IEventRunnerMiddleware => ({
   }
 });
 
-export default eventRunnerLogger;
+export default createVentRunnerLogger;

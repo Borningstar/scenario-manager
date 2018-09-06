@@ -35,7 +35,7 @@ export const createActiveScenario = (props?: Partial<ActiveScenario>) =>
     ...props
   } as ActiveScenario);
 
-export const createEvent = (props?: Partial<ScenarioEvent>) =>
+export const createScenarioEvent = (props?: Partial<ScenarioEvent>) =>
   ({
     _id: '1',
     activeScenarioId: '1',

@@ -1,4 +1,8 @@
-import { IActiveScenarioManager, IEventRunner } from '../../src/services';
+import {
+  IActiveScenarioManager,
+  IEventRunner,
+  ILogger
+} from '../../src/services';
 import { createScenarioState } from '../models';
 
 export const createStateManagerMock = (
@@ -11,5 +15,10 @@ export const createStateManagerMock = (
 
 export const createEventRunnerMock = (props?: Partial<IEventRunner>) => ({
   processEvents: jest.fn(() => createScenarioState()),
+  ...props
+});
+
+export const createLoggerMock = (props?: Partial<ILogger>) => ({
+  logInfo: jest.fn(),
   ...props
 });

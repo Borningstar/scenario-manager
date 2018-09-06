@@ -10,7 +10,7 @@ import actions, { ActionType } from './actions';
 import { EventType } from './types';
 import ActiveScenarioManager from './services/activeScenarioManager';
 import { ScenarioEventModel } from './models/scenarioEvent';
-import eventRunnerLogger from './utility/eventRunnerLogger';
+import createVentRunnerLogger from './utility/eventRunnerLogger';
 import { createConsoleLogger } from './services/consoleLogger';
 
 // import { ActiveScenarioModel } from '../models/activeScenario';
@@ -32,7 +32,9 @@ const initialiseApp = async () => {
 
   const logger = createConsoleLogger();
 
-  const eventRunner = createEventRunner(actions, [eventRunnerLogger(logger)]);
+  const eventRunner = createEventRunner(actions, [
+    createVentRunnerLogger(logger)
+  ]);
   const activeScenarioManager = new ActiveScenarioManager(eventRunner);
 
   // Way to quickly add scenarios until adding functionality complete

@@ -23,10 +23,10 @@ export class ScenarioEvent extends Typegoose {
   @prop()
   properties: EventProperties;
 
-  @prop({ required: true })
+  @prop()
   createdAt: Date;
 
-  @prop({ required: true })
+  @prop()
   updatedAt: Date;
 }
 

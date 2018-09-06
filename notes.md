@@ -1,8 +1,8 @@
 # TODO
 
-- Create eventProcessor?
-
 - Add logging middleware
+
+- Add scenario/db integration tests
 
 - Add socket.io
 - Add service to receive via socket and then trigger them

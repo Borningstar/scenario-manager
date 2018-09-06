@@ -2,63 +2,65 @@ import { IActiveScenarioManager, IEventRunner } from '.';
 import { ActiveScenarioModel } from '../models/activeScenario';
 import { ScenarioState } from '../models/scenarioState';
 import { ScenarioEvent } from '../models/scenarioEvent';
+import { ModelNotFoundError } from '../utility';
 
-let scenarios: ReadonlyArray<ScenarioState> = [];
+export default class ActiveScenarioManager implements IActiveScenarioManager {
+  private scenarios: ReadonlyArray<ScenarioState>;
+  private eventRunner: IEventRunner;
 
-// TODO: Check what happens when it fails to find
-const getScenario = async (
-  id: string,
-  eventRunner: IEventRunner
-): Promise<ScenarioState> => {
-  let scenario = scenarios.find(s => s.activeScenarioId === id);
-
-  if (scenario) {
-    return scenario;
+  constructor(eventRunner: IEventRunner) {
+    this.eventRunner = eventRunner;
+    this.scenarios = [];
   }
 
-  const model = await ActiveScenarioModel.findById(id);
+  public getScenario = async (id: string): Promise<ScenarioState> => {
+    let scenario = this.scenarios.find(s => s.activeScenarioId === id);
 
-  scenario = eventRunner.processEvents(model.events, model.initialState);
+    if (scenario) {
+      return scenario;
+    }
 
-  scenarios = [...scenarios, scenario];
+    const model = await ActiveScenarioModel.findById(id);
 
-  return scenario;
-};
+    if (!model) {
+      throw new ModelNotFoundError(
+        'Active Scenario not found with ID ' + id,
+        id
+      );
+    }
 
-// TODO: Check what happens when it fails to find
-const updateScenario = async (
-  id: string,
-  events: ReadonlyArray<ScenarioEvent>,
-  eventRunner: IEventRunner
-): Promise<ScenarioState> => {
-  const state = await getScenario(id, eventRunner);
+    scenario = this.eventRunner.processEvents(model.events, model.initialState);
 
-  await ActiveScenarioModel.updateOne(
-    { _id: id },
-    { $push: { $each: events } }
-  );
+    this.scenarios = [...this.scenarios, scenario];
 
-  const updatedState = eventRunner.processEvents(events, state);
+    return scenario;
+  };
 
-  scenarios = [...scenarios.filter(s => s._id), updatedState];
+  // TODO: Check what happens when it fails to find
+  public updateScenario = async (
+    id: string,
+    events: ReadonlyArray<ScenarioEvent>
+  ): Promise<ScenarioState> => {
+    const state = await this.getScenario(id);
 
-  return updatedState;
-};
+    await ActiveScenarioModel.updateOne(
+      { _id: id },
+      { $push: { $each: events } }
+    );
 
-// TODO: Check what happens when it fails to find
-const getScenarioHistory = async (
-  id: string
-): Promise<ReadonlyArray<ScenarioEvent>> => {
-  const model = await ActiveScenarioModel.findById(id);
+    const updatedState = this.eventRunner.processEvents(events, state);
 
-  return model.events;
-};
+    this.scenarios = [...this.scenarios.filter(s => s._id), updatedState];
 
-export const createActiveScenarioManager = (
-  eventRunner: IEventRunner
-): IActiveScenarioManager => ({
-  getScenario: (id: string) => getScenario(id, eventRunner),
-  getScenarioHistory: (id: string) => getScenarioHistory(id),
-  updateScenario: (id: string, events: ReadonlyArray<ScenarioEvent>) =>
-    updateScenario(id, events, eventRunner)
-});
+    return updatedState;
+  };
+
+  // TODO: Check what happens when it fails to find
+  public getScenarioHistory = async (
+    id: string
+  ): Promise<ReadonlyArray<ScenarioEvent>> => {
+    const model = await ActiveScenarioModel.findById(id);
+
+    return model.events;
+  };
+}

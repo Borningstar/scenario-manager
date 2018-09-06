@@ -107,7 +107,7 @@ describe('activeScenarioManager', () => {
           _id: id
         },
         {
-          $push: { $each: events }
+          $push: { events: { $each: events } }
         }
       );
 

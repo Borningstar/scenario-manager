@@ -97,7 +97,7 @@ describe('eventRunner', () => {
         expect(() =>
           sut.processEvents(events, createScenarioState())
         ).toThrowError(
-          `Value type in event properties is not a number: ${JSON.stringify(
+          `Value type in event properties is not a number, event: ${JSON.stringify(
             events[0]
           )}`
         );

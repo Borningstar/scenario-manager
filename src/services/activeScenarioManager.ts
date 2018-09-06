@@ -1,5 +1,5 @@
 import { IActiveScenarioManager, IEventRunner } from '.';
-import { ActiveScenarioModel, ActiveScenario } from '../models/activeScenario';
+import { ActiveScenarioModel } from '../models/activeScenario';
 import { ScenarioState } from '../models/scenarioState';
 import { ScenarioEvent } from '../models/scenarioEvent';
 import { ModelNotFoundError } from '../utility';
@@ -42,16 +42,16 @@ export default class ActiveScenarioManager implements IActiveScenarioManager {
 
   public updateScenario = async (
     id: string,
-    events: ReadonlyArray<ScenarioEvent>
+    events: ScenarioEvent[]
   ): Promise<ScenarioState> => {
     const state = await this.getScenario(id);
 
+    const updatedState = this.eventRunner.processEvents(events, state);
+
     await ActiveScenarioModel.updateOne(
       { _id: id },
-      { $push: { $each: events } }
+      { $push: { events: { $each: events } } }
     );
-
-    const updatedState = this.eventRunner.processEvents(events, state);
 
     this.scenarios = [...this.scenarios.filter(s => s._id), updatedState];
 

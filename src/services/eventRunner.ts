@@ -19,7 +19,7 @@ const processEvents = (
     case ActionType.AddValueToVariable:
       if (typeof event.properties.value !== 'number') {
         throw new Error(
-          `Value type in event properties is not a number: ${JSON.stringify(
+          `Value type in event properties is not a number, event: ${JSON.stringify(
             event
           )}`
         );

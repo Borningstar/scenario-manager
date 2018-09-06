@@ -1,6 +1,5 @@
 # TODO
 
-- Modify activeScenarioManager to facilitate Event Sourcing
 - Create eventProcessor?
 
 - Add logging middleware

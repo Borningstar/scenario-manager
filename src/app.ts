@@ -8,9 +8,8 @@ import { connectToDatabase } from './services/database';
 import { createEventRunner } from './services/eventRunner';
 import actions, { ActionType } from './actions';
 import { EventType } from './types';
-import { ScenarioEvent } from './models/scenarioEvent';
-import { ObjectId } from 'bson';
 import ActiveScenarioManager from './services/activeScenarioManager';
+import { ScenarioEventModel } from './models/scenarioEvent';
 
 // import { ActiveScenarioModel } from '../models/activeScenario';
 // import { VariableType } from '../types';
@@ -56,22 +55,46 @@ const initialiseApp = async () => {
   // } catch (e) {
   //   console.error('Error adding scenario: ' + JSON.stringify(e));
   // }
+
+  const events = [
+    new ScenarioEventModel({
+      activeScenarioId: '5b906a2199ef162644825d70',
+      name: 'Event',
+      action: ActionType.AddValueToVariable,
+      type: EventType.Activated,
+      properties: {
+        value: 4,
+        destinationVariable: 'variable'
+      }
+    })
+  ];
+
+  let scenario = await activeScenarioManager.getScenario(
+    '5b906a2199ef162644825d70'
+  );
+
+  console.log(scenario);
+
+  scenario = await activeScenarioManager.updateScenario(
+    '5b906a2199ef162644825d70',
+    events
+  );
+
+  console.log(scenario);
+
+  scenario = await activeScenarioManager.getScenario(
+    '5b906a2199ef162644825d70'
+  );
+
+  console.log(scenario);
+
+  const history = await activeScenarioManager.getScenarioHistory(
+    '5b906a2199ef162644825d70'
+  );
+
+  console.log(history);
 };
 
 initialiseApp();
-
-// const event: ScenarioEvent = {
-//   _id: '1',
-//   activeScenarioId: '5b73a9f6ede86a23a815c980',
-//   name: 'Event',
-//   action: ActionType.AddValueToVariable,
-//   type: EventType.Activated,
-//   properties: {
-//     value: 4,
-//     destinationVariable: 'variable'
-//   }
-// };
-
-// activeScenarioManager.getScenario('1');
 
 export default app;

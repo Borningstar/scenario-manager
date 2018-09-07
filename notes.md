@@ -1,10 +1,9 @@
 # TODO
 
-- Add event runner logging middleware
-
-- Add scenario/db integration tests
-
 - Add socket.io
+  --> get scenario
+  --> push event to scenario
+  --> send update events
 - Add service to receive via socket and then trigger them
 - Add middleware that posts updates for active scenarios when they get updated
 

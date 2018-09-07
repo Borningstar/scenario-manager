@@ -13,3 +13,5 @@ export class Variable extends Typegoose {
   @prop()
   public value: boolean | string | number;
 }
+
+export const VariableModel = new Variable().getModelForClass(Variable);

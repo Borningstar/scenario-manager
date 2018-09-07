@@ -1,11 +1,21 @@
 import mongoose from 'mongoose';
 
-const server = '127.0.0.1:27017';
-const database = 'scenario-manager';
+type DatabaseProps = Readonly<{
+  server: string;
+  database: string;
+}>;
 
-export const connectToDatabase = async () => {
+export const connectToDatabase = async (props?: Partial<DatabaseProps>) => {
+  const databaseSettings: DatabaseProps = {
+    server: '127.0.0.1:27017',
+    database: 'scenario-manager',
+    ...props
+  };
+
   try {
-    const db = `mongodb://${server}/${database}`;
+    const db = `mongodb://${databaseSettings.server}/${
+      databaseSettings.database
+    }`;
     await mongoose.connect(
       db,
       { useNewUrlParser: true }

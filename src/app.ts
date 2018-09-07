@@ -76,6 +76,8 @@ const initialiseApp = async () => {
   // ];
 
   // activeScenarioManager.updateScenario('5b906a2199ef162644825d70', events);
+
+  activeScenarioManager.getScenario('5b906a2199ef162644825d70');
 };
 
 initialiseApp();

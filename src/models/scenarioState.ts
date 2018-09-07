@@ -3,12 +3,12 @@ import { Team } from '../types';
 import { Variable } from './variable';
 
 /**
- * Represents scenario state, either initial or after applying events
+ * Represents scenario state, base, initial or after applying events
  */
 export class ScenarioState extends Typegoose {
   _id: string;
 
-  @prop({ required: true })
+  @prop()
   activeScenarioId: string;
 
   @prop({ default: false })
